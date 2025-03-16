@@ -38,20 +38,26 @@ public class DotenvReloadService implements ApplicationContextAware {
         }
 
         log.info("Reloading .env file...");
-        dotenvCache.clear();
-        dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
+        reloadDotenvCache();
 
         environment.getPropertySources().remove(DOTENV_KEY);
+        DotenvPropertySource newPropertySource = new DotenvPropertySource(DOTENV_KEY, dotenvCache);
 
-        if ("high".equals(environment.getProperty(DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY))) {
-            environment.getPropertySources().addFirst(new DotenvPropertySource(DOTENV_KEY, dotenvCache));
+        if (isHighPriority()) {
+            environment.getPropertySources().addFirst(newPropertySource);
         } else {
-            environment.getPropertySources().addLast(new DotenvPropertySource(DOTENV_KEY, dotenvCache));
+            environment.getPropertySources().addLast(newPropertySource);
         }
 
         log.info(".env file successfully reloaded ({} variables)",  dotenvCache.size());
-        log.info("Triggering Spring Context refresh...");
-        applicationContext.publishEvent(new ContextRefreshedEvent(applicationContext));
+        log.debug("Reloaded variables: {}", dotenvCache.keySet());
+
+        if (applicationContext != null) {
+            log.info("Triggering Spring Context refresh...");
+            applicationContext.publishEvent(new ContextRefreshedEvent(applicationContext));
+        } else {
+            log.warn("ApplicationContext is null, skipping refresh event.");
+        }
         return true;
     }
 
@@ -60,9 +66,18 @@ public class DotenvReloadService implements ApplicationContextAware {
         this.applicationContext = applicationContext;
     }
 
-    private static boolean isReloadEnabled(Environment environment) {
+    private void reloadDotenvCache() {
+        dotenvCache.clear();
+        dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
+    }
+
+    private boolean isReloadEnabled(Environment environment) {
         return Boolean.parseBoolean(environment.getProperty(
                 DOTENV_RELOAD_ENABLED_KEY, String.valueOf(DEFAULT_RELOAD_ENABLED)
         ));
+    }
+
+    private boolean isHighPriority() {
+        return "high".equals(environment.getProperty(DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY));
     }
 }
