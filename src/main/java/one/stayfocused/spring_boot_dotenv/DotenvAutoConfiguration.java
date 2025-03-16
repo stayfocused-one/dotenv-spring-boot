@@ -1,10 +1,11 @@
 package one.stayfocused.spring_boot_dotenv;
 
-import jakarta.annotation.Nonnull;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.lang.NonNull;
 
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 public class DotenvAutoConfiguration {
 
     @Bean
-    public DotenvPropertySource dotenvPropertySource(@Nonnull Environment environment) {
+    public DotenvPropertySource dotenvPropertySource(@NonNull Environment environment) {
         boolean dotenvEnabled = Boolean.parseBoolean(environment.getProperty("dotenv.enabled", "true"));
 
         if (!dotenvEnabled) {

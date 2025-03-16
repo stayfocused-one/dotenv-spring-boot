@@ -1,8 +1,8 @@
 package one.stayfocused.spring_boot_dotenv;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import org.springframework.core.env.PropertySource;
+import org.springframework.lang.*;
+
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ public class DotenvPropertySource extends PropertySource<Map<String, String>> {
 
     @Override
     @Nullable
-    public Object getProperty(@Nonnull String name) {
+    public Object getProperty(@NonNull String name) {
         return source.get(name);
     }
 }
