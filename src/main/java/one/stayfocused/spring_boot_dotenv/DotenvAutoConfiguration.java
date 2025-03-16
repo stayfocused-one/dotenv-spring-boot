@@ -13,9 +13,12 @@ import java.util.Map;
 @Configuration
 public class DotenvAutoConfiguration {
 
+    private static final String DOTENV_ENABLED_KEY = "dotenv.enabled";
+    private static final String DEFAULT_DOTENV_ENABLED = "true";
+
     @Bean
     public DotenvPropertySource dotenvPropertySource(@NonNull Environment environment) {
-        boolean dotenvEnabled = Boolean.parseBoolean(environment.getProperty("dotenv.enabled", "true"));
+        boolean dotenvEnabled = isDotenvEnabled(environment);
 
         if (!dotenvEnabled) {
             log.info("Dotenv support disabled via 'dotenv.enabled=false'. Skipping .env loading.");
@@ -23,7 +26,7 @@ public class DotenvAutoConfiguration {
         }
 
         log.info("Initializing DotenvPropertySource...");
-        Map<String, String> dotenvVariables = DotenvPropertySourceLoader.loadDotenv(environment);
+        Map<String, String> dotenvVariables = DotenvPropertySourceLoader.loadDotenvFromFile(environment);
 
         if (dotenvVariables.isEmpty()) {
             log.warn("DotenvPropertySource initialized, but no environment variables were loaded from .env.");
@@ -33,5 +36,11 @@ public class DotenvAutoConfiguration {
         }
 
         return new DotenvPropertySource("dotenv", dotenvVariables);
+    }
+
+    private boolean isDotenvEnabled(@NonNull Environment environment) {
+        return Boolean.parseBoolean(environment.getProperty(
+                DOTENV_ENABLED_KEY, String.valueOf(DEFAULT_DOTENV_ENABLED)
+        ));
     }
 }
