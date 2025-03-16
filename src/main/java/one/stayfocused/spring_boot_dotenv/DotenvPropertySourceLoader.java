@@ -14,48 +14,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class DotenvPropertySourceLoader {
 
+    private static final String DOTENV_PATH_KEY = "dotenv.path";
+    private static final String DOTENV_FAIL_ON_MISSING_KEY = "dotenv.fail-on-missing";
     private static final String DEFAULT_ENV_PATH = ".env";
-    private static final Map<String, String> dotenvCache = new ConcurrentHashMap<>();
+    private static final boolean DEFAULT_FAIL_ON_MISSING = false;
 
     // Private constructor to prevent instantiation
     private DotenvPropertySourceLoader() {
         throw new UnsupportedOperationException("DotenvPropertySourceLoader is a utility class and cannot be instantiated.");
     }
 
-    public static Map<String, String> loadDotenv(Environment environment) {
-        if (!dotenvCache.isEmpty()) {
-            return dotenvCache;
-        }
-        log.info("Initial loading of .env...");
-        dotenvCache.clear();
-        dotenvCache.putAll(loadDotenvFromFile(environment));
-        return dotenvCache;
-    }
-
-    public static Map<String, String> reloadDotenv(Environment environment) {
-        log.info("Reloading .env...");
-        dotenvCache.clear();
-        dotenvCache.putAll(loadDotenvFromFile(environment));
-        return dotenvCache;
-    }
-
-    private static boolean isFailOnMissing(Environment environment) {
-        return Boolean.parseBoolean(environment.getProperty("dotenv.fail-on-missing", "false"));
-    }
-
-    private static String getDotenvPath(Environment environment) {
-        return environment.getProperty("dotenv.path", DEFAULT_ENV_PATH);
-    }
-
-    private static void handleMissingFile(String dotenvPath, boolean failOnMissing) {
-        if (failOnMissing) {
-            throw new IllegalStateException(".env file not found at: " + dotenvPath);
-        } else {
-            log.warn(".env file not found at: {}", dotenvPath);
-        }
-    }
-
-    private static Map<String, String> loadDotenvFromFile(Environment environment) {
+    public static Map<String, String> loadDotenvFromFile(Environment environment) {
         String dotenvPath = getDotenvPath(environment);
         Path envFilePath = Paths.get(dotenvPath);
         boolean failOnMissing = isFailOnMissing(environment);
@@ -78,6 +47,24 @@ public class DotenvPropertySourceLoader {
             log.error("Error loading .env file: {}", envFilePath, e);
         }
         return dotenvVariables;
+    }
+
+    private static boolean isFailOnMissing(Environment environment) {
+        return Boolean.parseBoolean(environment.getProperty(
+                DOTENV_FAIL_ON_MISSING_KEY, String.valueOf(DEFAULT_FAIL_ON_MISSING)
+        ));
+    }
+
+    private static String getDotenvPath(Environment environment) {
+        return environment.getProperty(DOTENV_PATH_KEY, DEFAULT_ENV_PATH);
+    }
+
+    private static void handleMissingFile(String dotenvPath, boolean failOnMissing) {
+        if (failOnMissing) {
+            throw new IllegalStateException(".env file not found at: " + dotenvPath);
+        } else {
+            log.warn(".env file not found at: {}", dotenvPath);
+        }
     }
 
     private static void processLine(String line, Map<String, String> dotenvVariables) {
