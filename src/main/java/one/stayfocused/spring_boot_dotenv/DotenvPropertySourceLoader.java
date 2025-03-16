@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,27 +27,15 @@ public class DotenvPropertySourceLoader {
 
     public static Map<String, String> loadDotenvFromFile(Environment environment) {
         String dotenvPath = getDotenvPath(environment);
-        Path envFilePath = Paths.get(dotenvPath);
         boolean failOnMissing = isFailOnMissing(environment);
+        Path envFilePath = Paths.get(dotenvPath);
 
         if (!Files.exists(envFilePath)) {
             handleMissingFile(dotenvPath, failOnMissing);
-            return new ConcurrentHashMap<>();
+            return Collections.emptyMap();
         }
 
-        Map<String, String> dotenvVariables = new ConcurrentHashMap<>();
-
-        try {
-            log.info("Loading .env file from: {}", envFilePath);
-            List<String> lines =  Files.readAllLines(envFilePath);
-            for (String line : lines) {
-                processLine(line, dotenvVariables);
-            }
-            log.info(".env file successfully loaded ({} variables)", dotenvVariables.size());
-        } catch (IOException e) {
-            log.error("Error loading .env file: {}", envFilePath, e);
-        }
-        return dotenvVariables;
+        return parseDotenvLines(loadLinesFromFile(envFilePath));
     }
 
     private static boolean isFailOnMissing(Environment environment) {
@@ -67,13 +56,30 @@ public class DotenvPropertySourceLoader {
         }
     }
 
-    private static void processLine(String line, Map<String, String> dotenvVariables) {
-        if (!line.isBlank() && !line.startsWith("#")) {
-            String[] parts = line.split("=", 2);
-            if (parts.length == 2) {
-                dotenvVariables.put(parts[0].trim(), parts[1].trim());
-                log.debug("Loaded variable: {}=***", parts[0].trim());
+    private static List<String> loadLinesFromFile(Path envFilePath) {
+        try {
+            log.info("Loading .env file from: {}", envFilePath);
+            return Files.readAllLines(envFilePath);
+        } catch (IOException e) {
+            log.error("Error loading .env file: {}", envFilePath, e);
+            return Collections.emptyList();
+        }
+    }
+
+    private static Map<String, String> parseDotenvLines(List<String> lines) {
+        Map<String, String> dotenvVariables = new ConcurrentHashMap<>();
+
+        for (String line : lines) {
+            if (!line.isBlank() && !line.startsWith("#")) {
+                String[] parts = line.split("=", 2);
+                if (parts.length == 2) {
+                    dotenvVariables.put(parts[0].trim(), parts[1].trim());
+                    log.debug("Loaded variable: {}=***", parts[0].trim());
+                }
             }
         }
+
+        log.info(".env file successfully loaded ({} variables)", dotenvVariables.size());
+        return dotenvVariables;
     }
 }
