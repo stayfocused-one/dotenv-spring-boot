@@ -38,6 +38,7 @@ public class DotenvReloadService implements ApplicationContextAware {
         dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
         log.info(".env file successfully reloaded ({} variables)",  dotenvCache.size());
 
+        log.info("Triggering Spring Context refresh...");
         applicationContext.publishEvent(new ContextRefreshedEvent(applicationContext));
         return true;
     }
