@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,11 @@ public class DotenvReloadService implements ApplicationContextAware {
     private static final String DOTENV_RELOAD_ENABLED_KEY = "dotenv.reload.enabled";
     private static final boolean DEFAULT_RELOAD_ENABLED = false;
 
-    private final Environment environment;
+    private final ConfigurableEnvironment environment;
     private final Map<String, String> dotenvCache = new ConcurrentHashMap<>();
     private ApplicationContext applicationContext;
 
-    public DotenvReloadService(Environment environment) {
+    public DotenvReloadService(ConfigurableEnvironment environment) {
         this.environment = environment;
         this.dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
     }
@@ -36,6 +37,9 @@ public class DotenvReloadService implements ApplicationContextAware {
         log.info("Reloading .env file...");
         dotenvCache.clear();
         dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
+
+        environment.getPropertySources().remove("dotenv");
+        environment.getPropertySources().addFirst(new DotenvPropertySource("dotenv", dotenvCache));
         log.info(".env file successfully reloaded ({} variables)",  dotenvCache.size());
 
         log.info("Triggering Spring Context refresh...");
