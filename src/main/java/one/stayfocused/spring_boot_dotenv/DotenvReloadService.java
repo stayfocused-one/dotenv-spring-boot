@@ -16,8 +16,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class DotenvReloadService implements ApplicationContextAware {
 
+    private static final String DOTENV_KEY = "dotenv";
     private static final String DOTENV_RELOAD_ENABLED_KEY = "dotenv.reload.enabled";
     private static final boolean DEFAULT_RELOAD_ENABLED = false;
+    private static final String DOTENV_PRIORITY_KEY = "dotenv.priority";
+    private static final String DEFAULT_DOTENV_PRIORITY = "low";
 
     private final ConfigurableEnvironment environment;
     private final Map<String, String> dotenvCache = new ConcurrentHashMap<>();
@@ -38,10 +41,15 @@ public class DotenvReloadService implements ApplicationContextAware {
         dotenvCache.clear();
         dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
 
-        environment.getPropertySources().remove("dotenv");
-        environment.getPropertySources().addFirst(new DotenvPropertySource("dotenv", dotenvCache));
-        log.info(".env file successfully reloaded ({} variables)",  dotenvCache.size());
+        environment.getPropertySources().remove(DOTENV_KEY);
 
+        if ("high".equals(environment.getProperty(DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY))) {
+            environment.getPropertySources().addFirst(new DotenvPropertySource(DOTENV_KEY, dotenvCache));
+        } else {
+            environment.getPropertySources().addLast(new DotenvPropertySource(DOTENV_KEY, dotenvCache));
+        }
+
+        log.info(".env file successfully reloaded ({} variables)",  dotenvCache.size());
         log.info("Triggering Spring Context refresh...");
         applicationContext.publishEvent(new ContextRefreshedEvent(applicationContext));
         return true;
