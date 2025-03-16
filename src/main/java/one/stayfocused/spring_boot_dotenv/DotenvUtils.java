@@ -8,7 +8,7 @@ public final class DotenvUtils {
 
     public static final String DOTENV_KEY = "dotenv";
     public static final String DOTENV_PATH_KEY = "dotenv.path";
-    public static final String DOTENV_ENABLED_KEY = "dotenv.path";
+    public static final String DOTENV_ENABLED_KEY = "dotenv.enabled";
     public static final String DOTENV_FAIL_ON_MISSING_KEY = "dotenv.fail-on-missing";
     public static final String DOTENV_RELOAD_ENABLED_KEY = "dotenv.reload.enabled";
     public static final String DOTENV_PRIORITY_KEY = "dotenv.priority";
