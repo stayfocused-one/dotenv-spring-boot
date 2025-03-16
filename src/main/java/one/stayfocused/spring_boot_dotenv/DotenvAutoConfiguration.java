@@ -22,9 +22,7 @@ public class DotenvAutoConfiguration {
 
     @Bean
     public DotenvPropertySource dotenvPropertySource(@NonNull ConfigurableEnvironment environment) {
-        boolean dotenvEnabled = isDotenvEnabled(environment);
-
-        if (!dotenvEnabled) {
+        if (!isDotenvEnabled(environment)) {
             log.info("Dotenv support disabled via 'dotenv.enabled=false'. Skipping .env loading.");
             return new DotenvPropertySource(DOTENV_KEY, Map.of());
         }
@@ -41,10 +39,10 @@ public class DotenvAutoConfiguration {
 
         DotenvPropertySource propertySource = new DotenvPropertySource(DOTENV_KEY, dotenvVariables);
 
-        if ("high".equals(environment.getProperty(DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY))) {
-            environment.getPropertySources().addFirst(new DotenvPropertySource(DOTENV_KEY, dotenvVariables));
+        if (isHighPriority(environment)) {
+            environment.getPropertySources().addFirst(propertySource);
         } else {
-            environment.getPropertySources().addLast(new DotenvPropertySource(DOTENV_KEY, dotenvVariables));
+            environment.getPropertySources().addLast(propertySource);
         }
 
         return propertySource;
@@ -54,5 +52,9 @@ public class DotenvAutoConfiguration {
         return Boolean.parseBoolean(environment.getProperty(
                 DOTENV_ENABLED_KEY, String.valueOf(DEFAULT_DOTENV_ENABLED)
         ));
+    }
+
+    private boolean isHighPriority(@NonNull Environment environment) {
+        return "high".equals(environment.getProperty(DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY));
     }
 }
