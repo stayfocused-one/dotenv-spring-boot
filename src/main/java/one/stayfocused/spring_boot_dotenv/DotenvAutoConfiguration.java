@@ -14,7 +14,10 @@ import java.util.Map;
 @Configuration
 public class DotenvAutoConfiguration {
 
+    private static final String DOTENV_KEY = "dotenv";
     private static final String DOTENV_ENABLED_KEY = "dotenv.enabled";
+    private static final String DOTENV_PRIORITY_KEY = "dotenv.priority";
+    private static final String DEFAULT_DOTENV_PRIORITY = "low";
     private static final boolean DEFAULT_DOTENV_ENABLED = true;
 
     @Bean
@@ -23,7 +26,7 @@ public class DotenvAutoConfiguration {
 
         if (!dotenvEnabled) {
             log.info("Dotenv support disabled via 'dotenv.enabled=false'. Skipping .env loading.");
-            return new DotenvPropertySource("dotenv", Map.of());
+            return new DotenvPropertySource(DOTENV_KEY, Map.of());
         }
 
         log.info("Initializing DotenvPropertySource...");
@@ -36,8 +39,13 @@ public class DotenvAutoConfiguration {
             log.debug("Loaded variables: {}", dotenvVariables.keySet());
         }
 
-        DotenvPropertySource propertySource = new DotenvPropertySource("dotenv", dotenvVariables);
-        environment.getPropertySources().addFirst(propertySource);
+        DotenvPropertySource propertySource = new DotenvPropertySource(DOTENV_KEY, dotenvVariables);
+
+        if ("high".equals(environment.getProperty(DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY))) {
+            environment.getPropertySources().addFirst(new DotenvPropertySource(DOTENV_KEY, dotenvVariables));
+        } else {
+            environment.getPropertySources().addLast(new DotenvPropertySource(DOTENV_KEY, dotenvVariables));
+        }
 
         return propertySource;
     }
