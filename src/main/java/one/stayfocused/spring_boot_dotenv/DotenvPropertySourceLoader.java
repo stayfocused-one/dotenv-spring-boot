@@ -13,6 +13,11 @@ import java.util.Map;
 @Slf4j
 public class DotenvPropertySourceLoader {
 
+    // Private constructor to prevent instantiation
+    private DotenvPropertySourceLoader() {
+        throw new UnsupportedOperationException("DotenvPropertySourceLoader is a utility class and cannot be instantiated.");
+    }
+
     public static Map<String, String> loadDotenv(Environment environment) {
         String dotenvPath = environment.getProperty("dotenv.path", ".env");
         Map<String, String> dotenvVariables = new HashMap<>();
