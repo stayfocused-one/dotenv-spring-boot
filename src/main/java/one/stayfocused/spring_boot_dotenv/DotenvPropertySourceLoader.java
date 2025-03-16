@@ -20,23 +20,40 @@ public class DotenvPropertySourceLoader {
     }
 
     public static Map<String, String> loadDotenv(Environment environment) {
-        String dotenvPath = environment.getProperty("dotenv.path", ".env");
-        boolean failOnMissing = Boolean.parseBoolean(environment.getProperty("dotenv.fail-on-missing", "false"));
 
-        Map<String, String> dotenvVariables = new HashMap<>();
+        String dotenvPath = getDotenvPath(environment);
+        boolean failOnMissing = isFailOnMissing(environment);
+
         Path envFilePath = Paths.get(dotenvPath);
-
         if (!Files.exists(envFilePath)) {
-            if (failOnMissing) {
-                throw new IllegalStateException(".env file not found at: " + dotenvPath);
-            } else {
-                log.warn(".env file not found at: {}", dotenvPath);
-                return dotenvVariables;
-            }
+            handleMissingFile(dotenvPath, failOnMissing);
+            return Map.of();
         }
 
+        return loadDotenvFromFile(envFilePath);
+    }
+
+    private static boolean isFailOnMissing(Environment environment) {
+        return Boolean.parseBoolean(environment.getProperty("dotenv.fail-on-missing", "false"));
+    }
+
+    private static String getDotenvPath(Environment environment) {
+        return environment.getProperty("dotenv.path", ".env");
+    }
+
+    private static void handleMissingFile(String dotenvPath, boolean failOnMissing) {
+        if (failOnMissing) {
+            throw new IllegalStateException(".env file not found at: " + dotenvPath);
+        } else {
+            log.warn(".env file not found at: {}", dotenvPath);
+        }
+    }
+
+    private static Map<String, String> loadDotenvFromFile(Path  envFilePath) {
+        Map<String, String> dotenvVariables = new HashMap<>();
+
         try {
-            log.info("Loading .env file from: {}", dotenvPath);
+            log.info("Loading .env file from: {}", envFilePath);
             List<String> lines =  Files.readAllLines(envFilePath);
 
             for (String line : lines) {
@@ -50,9 +67,8 @@ public class DotenvPropertySourceLoader {
             }
             log.info(".env file successfully loaded ({} variables)", dotenvVariables.size());
         } catch (IOException e) {
-            log.error("Error loading .env file: {}", dotenvPath, e);
+            log.error("Error loading .env file: {}", envFilePath, e);
         }
-
         return dotenvVariables;
     }
 }
