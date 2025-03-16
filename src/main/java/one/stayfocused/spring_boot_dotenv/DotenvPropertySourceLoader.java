@@ -5,6 +5,7 @@ import org.springframework.core.env.Environment;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +21,23 @@ public class DotenvPropertySourceLoader {
 
     public static Map<String, String> loadDotenv(Environment environment) {
         String dotenvPath = environment.getProperty("dotenv.path", ".env");
+        boolean failOnMissing = Boolean.parseBoolean(environment.getProperty("dotenv.fail-on-missing", "false"));
+
         Map<String, String> dotenvVariables = new HashMap<>();
+        Path envFilePath = Paths.get(dotenvPath);
+
+        if (!Files.exists(envFilePath)) {
+            if (failOnMissing) {
+                throw new IllegalStateException(".env file not found at: " + dotenvPath);
+            } else {
+                log.warn(".env file not found at: {}", dotenvPath);
+                return dotenvVariables;
+            }
+        }
 
         try {
             log.info("Loading .env file from: {}", dotenvPath);
-            List<String> lines =  Files.readAllLines(Paths.get(dotenvPath));
+            List<String> lines =  Files.readAllLines(envFilePath);
 
             for (String line : lines) {
                 if (!line.isBlank() && !line.startsWith("#")) {
@@ -37,7 +50,7 @@ public class DotenvPropertySourceLoader {
             }
             log.info(".env file successfully loaded ({} variables)", dotenvVariables.size());
         } catch (IOException e) {
-            log.warn("Failed to load .env file: {}", dotenvPath, e);
+            log.error("Error loading .env file: {}", dotenvPath, e);
         }
 
         return dotenvVariables;
