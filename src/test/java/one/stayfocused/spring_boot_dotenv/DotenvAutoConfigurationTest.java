@@ -8,7 +8,7 @@ import org.springframework.core.env.Environment;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-class DotenvAutoConfigurationTest {
+class DotenvAutoConfigurationTest extends DotenvTestBase{
 
     @Autowired
     private Environment environment;
