@@ -5,24 +5,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 
 import java.util.Map;
+
+import static one.stayfocused.spring_boot_dotenv.DotenvUtils.*;
 
 @Slf4j
 @Configuration
 public class DotenvAutoConfiguration {
 
-    private static final String DOTENV_KEY = "dotenv";
-    private static final String DOTENV_ENABLED_KEY = "dotenv.enabled";
-    private static final String DOTENV_PRIORITY_KEY = "dotenv.priority";
-    private static final String DEFAULT_DOTENV_PRIORITY = "low";
-    private static final boolean DEFAULT_DOTENV_ENABLED = true;
-
     @Bean
     public DotenvPropertySource dotenvPropertySource(@NonNull ConfigurableEnvironment environment) {
-        if (!isDotenvEnabled(environment)) {
+        boolean dotenvEnabled = DotenvUtils.getBooleanProperty(environment, DOTENV_ENABLED_KEY, DEFAULT_DOTENV_ENABLED);
+
+        if (!dotenvEnabled) {
             log.info("Dotenv support disabled via 'dotenv.enabled=false'. Skipping .env loading.");
             return new DotenvPropertySource(DOTENV_KEY, Map.of());
         }
@@ -46,15 +43,5 @@ public class DotenvAutoConfiguration {
         }
 
         return propertySource;
-    }
-
-    private boolean isDotenvEnabled(@NonNull Environment environment) {
-        return Boolean.parseBoolean(environment.getProperty(
-                DOTENV_ENABLED_KEY, String.valueOf(DEFAULT_DOTENV_ENABLED)
-        ));
-    }
-
-    private boolean isHighPriority(@NonNull Environment environment) {
-        return "high".equals(environment.getProperty(DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY));
     }
 }

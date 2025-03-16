@@ -5,22 +5,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static one.stayfocused.spring_boot_dotenv.DotenvUtils.*;
+
 @Slf4j
 @Service
 public class DotenvReloadService implements ApplicationContextAware {
-
-    private static final String DOTENV_KEY = "dotenv";
-    private static final String DOTENV_RELOAD_ENABLED_KEY = "dotenv.reload.enabled";
-    private static final boolean DEFAULT_RELOAD_ENABLED = false;
-    private static final String DOTENV_PRIORITY_KEY = "dotenv.priority";
-    private static final String DEFAULT_DOTENV_PRIORITY = "low";
 
     private final ConfigurableEnvironment environment;
     private final Map<String, String> dotenvCache = new ConcurrentHashMap<>();
@@ -28,7 +23,7 @@ public class DotenvReloadService implements ApplicationContextAware {
 
     public DotenvReloadService(ConfigurableEnvironment environment) {
         this.environment = environment;
-        this.dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
+        reloadDotenvCache();
     }
 
     public boolean reload() {
@@ -43,7 +38,7 @@ public class DotenvReloadService implements ApplicationContextAware {
         environment.getPropertySources().remove(DOTENV_KEY);
         DotenvPropertySource newPropertySource = new DotenvPropertySource(DOTENV_KEY, dotenvCache);
 
-        if (isHighPriority()) {
+        if (isHighPriority(environment)) {
             environment.getPropertySources().addFirst(newPropertySource);
         } else {
             environment.getPropertySources().addLast(newPropertySource);
@@ -69,15 +64,5 @@ public class DotenvReloadService implements ApplicationContextAware {
     private void reloadDotenvCache() {
         dotenvCache.clear();
         dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
-    }
-
-    private boolean isReloadEnabled(Environment environment) {
-        return Boolean.parseBoolean(environment.getProperty(
-                DOTENV_RELOAD_ENABLED_KEY, String.valueOf(DEFAULT_RELOAD_ENABLED)
-        ));
-    }
-
-    private boolean isHighPriority() {
-        return "high".equals(environment.getProperty(DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY));
     }
 }
