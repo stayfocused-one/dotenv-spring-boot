@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Endpoint(id = "dotenv-reload")
+@Endpoint(id = "dotenvReload")
 public class DotenvReloadEndpoint {
 
     private final DotenvReloadService dotenvReloadService;
