@@ -1,0 +1,34 @@
+{
+  "properties": [
+    {
+      "name": "dotenv.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enables or disables dotenv integration.",
+      "defaultValue": true
+    },
+    {
+      "name": "dotenv.path",
+      "type": "java.lang.String",
+      "description": "Path to the .env file.",
+      "defaultValue": ".env"
+    },
+    {
+      "name": "dotenv.priority",
+      "type": "java.lang.String",
+      "description": "Defines the priority of .env properties ('high' or 'low').",
+      "defaultValue": "low"
+    },
+    {
+      "name": "dotenv.fail-on-missing",
+      "type": "java.lang.Boolean",
+      "description": "Fails the application if the .env file is missing.",
+      "defaultValue": false
+    },
+    {
+      "name": "dotenv.reload.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Allows reloading .env variables at runtime.",
+      "defaultValue": false
+    }
+  ]
+}
