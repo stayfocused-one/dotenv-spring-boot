@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,19 +13,19 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(properties = "dotenv.path=src/test/resources/.env")
+@SpringBootTest(properties = "dotenv.path=src/test/.env")
 class DotenvCustomPathTest {
 
     @Autowired
     private Environment environment;
 
-    protected static final Path DOTENV_PATH = Path.of("src/test/resources/.env");
+    protected static final Path DOTENV_PATH = Path.of("src/test/.env");
     protected static final String DEFAULT_TEST_PROPERTY = "TEST_ENV_VAR=LoadedDotenvWithCustomPath";
 
     @BeforeAll
-    static void createDotenv() throws IOException {
+    static void createDotenv() throws IOException, InterruptedException {
         Files.writeString(DOTENV_PATH, DEFAULT_TEST_PROPERTY);
+        Thread.sleep(1000);
     }
 
     @AfterAll
