@@ -23,7 +23,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>one.stayfocused</groupId>
     <artifactId>spring-boot-dotenv</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -31,7 +31,7 @@ Add the following dependency to your `pom.xml`:
 
 ```kotlin
 dependencies {
-    implementation("one.stayfocused:spring-boot-dotenv:0.0.1")
+    implementation("one.stayfocused:spring-boot-dotenv:1.0.0")
 }
 ```
 
