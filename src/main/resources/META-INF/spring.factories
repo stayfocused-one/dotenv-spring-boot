@@ -1,4 +1,4 @@
 # Spring Boot AutoConfiguration for Dotenv
 # This ensures that DotenvAutoConfiguration is automatically loaded
 # when the application starts.
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=one.stayfocused.dotenv.DotenvAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=one.stayfocused.spring_boot_dotenv.DotenvAutoConfiguration
