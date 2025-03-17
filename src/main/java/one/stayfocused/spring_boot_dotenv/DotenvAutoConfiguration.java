@@ -21,7 +21,7 @@ public class DotenvAutoConfiguration {
 
         if (!dotenvEnabled) {
             log.info("Dotenv support disabled via 'dotenv.enabled=false'. Skipping .env loading.");
-            return new DotenvPropertySource(DOTENV_KEY, Map.of());
+            return new DotenvPropertySource(PROPERTY_SOURCE_NAME, Map.of());
         }
 
         log.info("Initializing DotenvPropertySource...");
@@ -34,7 +34,7 @@ public class DotenvAutoConfiguration {
             log.debug("Loaded variables: {}", dotenvVariables.keySet());
         }
 
-        DotenvPropertySource propertySource = new DotenvPropertySource(DOTENV_KEY, dotenvVariables);
+        DotenvPropertySource propertySource = new DotenvPropertySource(PROPERTY_SOURCE_NAME, dotenvVariables);
 
         if (isHighPriority(environment)) {
             environment.getPropertySources().addFirst(propertySource);
