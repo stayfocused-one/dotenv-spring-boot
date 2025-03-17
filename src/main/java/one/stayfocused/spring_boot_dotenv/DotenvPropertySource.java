@@ -15,6 +15,7 @@ import java.util.Map;
  * environment variables and integrates them into Spring's {@link Environment}.
  *
  * @author Augustin (StayFocused)
+ * @since 0.0.1
  */
 public class DotenvPropertySource extends PropertySource<Map<String, String>> {
 
