@@ -1,11 +1,11 @@
 # Spring Boot Dotenv
 
-Spring Boot Dotenv provides a **simple and flexible** way to load `.env` files into Spring Boot applications. It requires **no manual configuration**, automatically integrating environment variables from `.env` files into the application's `Environment`. It also supports **profile-based `.env` files**, allowing different `.env` configurations based on the active Spring profile. The library is **fault-tolerant**, meaning if a `.env` file is missing, the application will still run without issues, ensuring maximum **flexibility**.
+Spring Boot Dotenv provides a **simple and flexible** way to load `.env` files into Spring Boot applications. It requires **no manual configuration**, automatically integrating environment variables from `.env` files into the application's `Environment` with just a single `@EnableDotenv` annotation. It also supports **profile-based `.env` files**, allowing different `.env` configurations based on the active Spring profile. The library is **fault-tolerant**, meaning if a `.env` file is missing, the application will still run without issues, ensuring maximum **flexibility**.
 ## Features
 
+- **Autoconfiguration** using `@EnableDotenv`.
 - **Flexible loading** of `.env` from different locations: project root, `resources/`, or a custom path (`dotenv.path`).
 - **Profile-based .env support** (`.env.{profile}` for different environments).
-- **Autoconfiguration** without requiring `@EnableDotenv`.
 - **Configurable settings** via `application.properties`.
 - **Environment reload** without restarting the application via Spring Actuator or a custom REST endpoint.
 - **Priority handling** for `.env` (high/low).
@@ -39,14 +39,28 @@ dependencies {
 
 ## Quick Start
 
-Create a `.env` file in the project root:
+### **1. Enable Dotenv**
+
+```java
+@EnableDotenv // Required to activate dotenv support
+@SpringBootApplication
+public class MyApp {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApp.class, args);
+    }
+}
+```
+
+➡ *Dotenv requires `@EnableDotenv` to be explicitly added to your main class. Without it, dotenv support will not be activated.*
+
+### **2. Create a `.env` file**
 
 ```env
 DATABASE_URL=jdbc:postgresql://localhost:5432/mydb
 SECRET_KEY=mysecret
 ```
 
-### Configuration via `application.properties`:
+### **3. Configuration via `application.properties`**
 
 ```properties
 # Enable dotenv (default: true)
