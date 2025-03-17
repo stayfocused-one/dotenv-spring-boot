@@ -2,6 +2,7 @@ package one.stayfocused.spring_boot_dotenv;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -29,14 +30,19 @@ import static one.stayfocused.spring_boot_dotenv.DotenvUtils.*;
  * @since 0.0.1
  */
 @Slf4j
+@EnableConfigurationProperties(DotenvProperties.class)
 @Configuration
 public class DotenvAutoConfiguration {
 
     @Bean
-    public DotenvPropertySource dotenvPropertySource(@NonNull ConfigurableEnvironment environment) {
-        boolean dotenvEnabled = DotenvUtils.getBooleanProperty(environment, DOTENV_ENABLED_KEY, DEFAULT_DOTENV_ENABLED);
+    public DotenvPropertySource dotenvPropertySource(@NonNull ConfigurableEnvironment environment,
+                                                     DotenvProperties properties) {
 
-        if (!dotenvEnabled) {
+        log.info("Dotenv Configuration: enabled={}, path={}, priority={}, failOnMissing={}, reloadEnabled={}",
+                properties.isEnabled(), properties.getPath(), properties.getPriority(),
+                properties.isFailOnMissing(), properties.isReloadEnabled());
+
+        if (!properties.isEnabled()) {
             log.info("Dotenv support disabled via 'dotenv.enabled=false'. Skipping .env loading.");
             return new DotenvPropertySource(PROPERTY_SOURCE_NAME, Map.of());
         }
@@ -53,7 +59,7 @@ public class DotenvAutoConfiguration {
 
         DotenvPropertySource propertySource = new DotenvPropertySource(PROPERTY_SOURCE_NAME, dotenvVariables);
 
-        if (isHighPriority(environment)) {
+        if ("high".equals(properties.getPriority())) {
             environment.getPropertySources().addFirst(propertySource);
         } else {
             environment.getPropertySources().addLast(propertySource);
