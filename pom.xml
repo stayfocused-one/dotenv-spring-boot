@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>one.stayfocused</groupId>
 	<artifactId>spring-boot-dotenv</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>spring-boot-dotenv</name>
 	<description>spring-boot-dotenv enables easy and flexible .env file loading in Spring Boot applications. Supports multiple sources: root directory, resources folder, or a custom path via DOTENV_PATH.</description>
 	<url/>
