@@ -23,9 +23,8 @@ class DotenvCustomPathTest {
     protected static final String DEFAULT_TEST_PROPERTY = "TEST_ENV_VAR=LoadedDotenvWithCustomPath";
 
     @BeforeAll
-    static void createDotenv() throws IOException, InterruptedException {
+    static void createDotenv() throws IOException {
         Files.writeString(DOTENV_PATH, DEFAULT_TEST_PROPERTY);
-        Thread.sleep(1000);
     }
 
     @AfterAll
