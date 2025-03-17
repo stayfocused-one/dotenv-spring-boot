@@ -1,9 +1,10 @@
 # Spring Boot Dotenv
 
-Spring Boot Dotenv provides a **simple and flexible** way to load `.env` files into Spring Boot applications. It requires **no manual configuration**, automatically integrating environment variables from `.env` files into the application's `Environment`. The library is **fault-tolerant**, meaning if a `.env` file is missing, the application will still run without issues, ensuring maximum **flexibility**.
+Spring Boot Dotenv provides a **simple and flexible** way to load `.env` files into Spring Boot applications. It requires **no manual configuration**, automatically integrating environment variables from `.env` files into the application's `Environment`. It also supports **profile-based `.env` files**, allowing different `.env` configurations based on the active Spring profile. The library is **fault-tolerant**, meaning if a `.env` file is missing, the application will still run without issues, ensuring maximum **flexibility**.
 ## Features
 
 - **Flexible loading** of `.env` from different locations: project root, `resources/`, or a custom path (`dotenv.path`).
+- **Profile-based .env support** (`.env.{profile}` for different environments).
 - **Autoconfiguration** without requiring `@EnableDotenv`.
 - **Configurable settings** via `application.properties`.
 - **Environment reload** without restarting the application via Spring Actuator or a custom REST endpoint.
@@ -51,16 +52,16 @@ SECRET_KEY=mysecret
 # Enable dotenv (default: true)
 dotenv.enabled=true
 
-# Custom path to .env (root is default)
+# Custom path to .env (project root by default)
 dotenv.path=config/.env
 
 # Priority (high - above application.properties, low - below)
 dotenv.priority=high
 
-# Allow reloading without restart (default: false)
+# Allow reloading without restart
 dotenv.reload.enabled=true
 
-# Allow the application to continue running or fail if .env is missing
+# Allow application run in case .env is missing
 dotenv.fail-on-missing=false
 ```
 
@@ -70,6 +71,28 @@ Now, environment variables are available in the `Environment`:
 @Value("${DATABASE_URL}")
 private String databaseUrl;
 ```
+
+### Using Different `.env` Files for Different Profiles
+
+You can automatically load different `.env` files based on the active Spring profile:
+
+```properties
+spring.profiles.active=dev
+dotenv.path=.env.${spring.profiles.active}
+```
+
+#### Example Setup:
+
+- `.env.dev`
+  ```env
+  TEST_ENV_VAR=LoadedFromDevEnv
+  ```
+- `.env.prod`
+  ```env
+  TEST_ENV_VAR=LoadedFromProdEnv
+  ```
+
+When running with `spring.profiles.active=dev`, the library will load `.env.dev`.
 
 ---
 
@@ -131,13 +154,13 @@ curl -X POST http://localhost:8080/dotenv/reload
 
 ## Configuration Options
 
-| Property                 | Description                       | Default Value |
-| ------------------------ | --------------------------------- | ------------- |
-| `dotenv.enabled`         | Enables/disables `.env` loading   | `true`        |
-| `dotenv.path`            | Path to the `.env` file           | `.env`        |
-| `dotenv.priority`        | Load priority (`high` or `low`)   | `low`         |
-| `dotenv.fail-on-missing` | Fails if `.env` is missing        | `false`       |
-| `dotenv.reload.enabled`  | Enables reloading without restart | `false`       |
+| Property                 | Description                                       | Default Value |
+| ------------------------ | ------------------------------------------------- | ------------- |
+| `dotenv.enabled`         | Enables/disables `.env` loading                   | `true`        |
+| `dotenv.path`            | Path to the `.env` file                           | `.env`        |
+| `dotenv.priority`        | Load priority (`high` or `low`)                   | `low`         |
+| `dotenv.fail-on-missing` | Fails if `.env` is missing                        | `false`       |
+| `dotenv.reload.enabled`  | Enables reloading without restart                 | `false`       |
 
 ---
 
