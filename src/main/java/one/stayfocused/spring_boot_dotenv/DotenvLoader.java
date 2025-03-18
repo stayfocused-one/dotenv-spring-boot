@@ -1,6 +1,7 @@
 package one.stayfocused.spring_boot_dotenv;
 
 import lombok.extern.slf4j.Slf4j;
+import one.stayfocused.spring_boot_dotenv.exception.DotenvFileNotFoundException;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
@@ -12,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static one.stayfocused.spring_boot_dotenv.DotenvUtils.*;
+
 @Slf4j
 public class DotenvLoader {
 
@@ -20,8 +23,8 @@ public class DotenvLoader {
     }
 
     public static Map<String, String> load(Environment environment) {
-        String dotenvPath = environment.getProperty("dotenv.path", ".env");
-        boolean failOnMissing = Boolean.parseBoolean(environment.getProperty("dotenv.fail-on-missing", "false"));
+        String dotenvPath = environment.getProperty(DOTENV_PATH_KEY, DEFAULT_ENV_PATH);
+        boolean failOnMissing = isFailOnMissing(environment);
         return loadFromPath(dotenvPath, failOnMissing);
     }
 
@@ -31,7 +34,7 @@ public class DotenvLoader {
         if (!Files.exists(envPath)) {
             log.warn("[Dotenv] .env file not found at: {}", envPath);
             if (failOnMissing) {
-                throw new RuntimeException("[Dotenv] Required .env file is missing at: " + envPath);
+                throw new DotenvFileNotFoundException(path);
             }
             return Collections.emptyMap();
         }
