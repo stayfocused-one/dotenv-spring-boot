@@ -27,7 +27,7 @@ import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
  * <p>To enable reloading, set {@code dotenv.reload.enabled=true} in your application properties.
  *
  * @author Augustin (StayFocused)
- * @since 0.0.1
+ * @since 1.0.0
  */
 @Slf4j
 @Service

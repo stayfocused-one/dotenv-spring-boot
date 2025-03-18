@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv;
+package one.stayfocused.spring_boot_dotenv.environment;
 
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
@@ -15,7 +15,7 @@ import java.util.Map;
  * environment variables and integrates them into Spring's {@link Environment}.
  *
  * @author Augustin (StayFocused)
- * @since 0.0.1
+ * @since 1.0.0
  */
 public class DotenvPropertySource extends PropertySource<Map<String, String>> {
 

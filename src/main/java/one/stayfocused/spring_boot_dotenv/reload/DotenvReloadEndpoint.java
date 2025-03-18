@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * }</pre>
  *
  * @author Augustin (StayFocused)
- * @since 0.0.1
+ * @since 1.0.0
  */
 @Component
 @RequiredArgsConstructor
