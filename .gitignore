@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### More ###
+dependency-reduced-pom.xml
