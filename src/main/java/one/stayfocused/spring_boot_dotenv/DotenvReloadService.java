@@ -33,6 +33,7 @@ public class DotenvReloadService implements ApplicationContextAware {
 
     private final ConfigurableEnvironment environment;
     private final Map<String, String> dotenvCache = new ConcurrentHashMap<>();
+
     private ApplicationContext applicationContext;
 
     /**
@@ -58,11 +59,11 @@ public class DotenvReloadService implements ApplicationContextAware {
      */
     public boolean reload() {
         if (!isReloadEnabled(environment)) {
-            log.warn("Dotenv reload is disabled. Enable it with `dotenv.reload.enabled=true`");
+            log.warn("[Dotenv] Dotenv reload is disabled. Enable it with `dotenv.reload.enabled=true`");
             return false;
         }
 
-        log.info("Reloading .env file...");
+        log.info("[Dotenv] Reloading .env file...");
         reloadDotenvCache();
 
         environment.getPropertySources().remove(PROPERTY_SOURCE_NAME);
@@ -74,14 +75,14 @@ public class DotenvReloadService implements ApplicationContextAware {
             environment.getPropertySources().addLast(newPropertySource);
         }
 
-        log.info(".env file successfully reloaded ({} variables)",  dotenvCache.size());
-        log.debug("Reloaded variables: {}", dotenvCache.keySet());
+        log.info("[Dotenv] .env file successfully reloaded ({} variables)",  dotenvCache.size());
+        log.debug("[Dotenv] Reloaded variables: {}", dotenvCache.keySet());
 
         if (applicationContext != null) {
-            log.info("Triggering Spring Context refresh...");
+            log.info("[Dotenv] Triggering Spring Context refresh...");
             applicationContext.publishEvent(new ContextRefreshedEvent(applicationContext));
         } else {
-            log.warn("ApplicationContext is null, skipping refresh event.");
+            log.warn("[Dotenv] ApplicationContext is null, skipping refresh event.");
         }
         return true;
     }
@@ -102,6 +103,6 @@ public class DotenvReloadService implements ApplicationContextAware {
      */
     private void reloadDotenvCache() {
         dotenvCache.clear();
-        dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
+        dotenvCache.putAll(DotenvLoader.load(environment));
     }
 }
