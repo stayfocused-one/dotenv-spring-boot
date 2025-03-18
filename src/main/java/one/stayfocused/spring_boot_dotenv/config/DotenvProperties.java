@@ -1,11 +1,13 @@
 package one.stayfocused.spring_boot_dotenv;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Provides metadata for dotenv settings in application.properties / application.yml.
  */
+@Setter
 @Getter
 @ConfigurationProperties(prefix = "dotenv")
 public class DotenvProperties {

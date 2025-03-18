@@ -1,5 +1,1 @@
-# Spring Boot AutoConfiguration for Dotenv
-# This ensures that DotenvAutoConfiguration is automatically loaded
-# when the application starts.
-org.springframework.boot.env.EnvironmentPostProcessor=one.stayfocused.spring_boot_dotenv.DotenvEnvironmentPostProcessor
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=one.stayfocused.spring_boot_dotenv.DotenvAutoConfiguration
+org.springframework.boot.env.EnvironmentPostProcessor=one.stayfocused.spring_boot_dotenv.environment.DotenvEnvironmentPostProcessor
