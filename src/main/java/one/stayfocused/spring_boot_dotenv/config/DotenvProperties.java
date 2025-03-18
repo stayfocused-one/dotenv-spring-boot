@@ -6,6 +6,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Provides metadata for dotenv settings in application.properties / application.yml.
+ *
+ * @author Augustin (StayFocused)
+ * @since 1.0.0
  */
 @Setter
 @Getter
