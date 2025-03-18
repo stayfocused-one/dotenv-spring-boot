@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv;
+package one.stayfocused.spring_boot_dotenv.config;
 
 import lombok.Getter;
 import lombok.Setter;

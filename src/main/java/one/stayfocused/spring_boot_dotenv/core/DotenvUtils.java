@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv;
+package one.stayfocused.spring_boot_dotenv.core;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
