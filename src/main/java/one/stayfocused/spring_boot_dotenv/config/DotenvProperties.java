@@ -1,5 +1,6 @@
 package one.stayfocused.spring_boot_dotenv.config;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -38,5 +39,6 @@ public class DotenvProperties {
     /**
      * Enable or disable the ability to reload the .env file at runtime.
      */
+    @JsonProperty("reload.enabled")
     private boolean reloadEnabled = false;
 }
