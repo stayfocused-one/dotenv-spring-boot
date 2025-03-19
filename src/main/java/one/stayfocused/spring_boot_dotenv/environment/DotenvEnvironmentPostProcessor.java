@@ -26,7 +26,10 @@ import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
 public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     static {
-        System.out.println("\nstayfocused.one :: Dotenv for Spring Boot (v1.0.0)\n");
+        final String BLUE = "\u001B[34m";
+        final String RESET = "\u001B[0m";
+
+        System.out.println("\n" + BLUE + "stayfocused.one" + RESET + " :: Dotenv for Spring Boot (v1.0.0)\n");
     }
 
     @Override
