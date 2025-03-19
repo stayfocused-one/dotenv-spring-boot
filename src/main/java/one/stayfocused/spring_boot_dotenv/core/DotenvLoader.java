@@ -85,7 +85,7 @@ public class DotenvLoader {
         Map<String, String> envVariables = new HashMap<>();
         try (Stream<String> lines = Files.lines(envPath)) {
             lines.forEach(line -> parseLine(line, envVariables));
-            log.info("[Dotenv] Successfully loaded {} variables from {}", envVariables.size(), envPath);
+            log.debug("[Dotenv] Successfully loaded {} variables from {}", envVariables.size(), envPath);
         } catch (IOException e) {
             log.error("[Dotenv] Failed to load .env file from {}: {}", envPath, e.getMessage());
         }

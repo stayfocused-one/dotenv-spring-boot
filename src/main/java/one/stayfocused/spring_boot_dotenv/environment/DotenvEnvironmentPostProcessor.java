@@ -25,14 +25,14 @@ import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
 @Slf4j
 public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
+    static {
+        System.out.println("\nstayfocused.one :: Dotenv for Spring Boot (v1.0.0)\n");
+    }
+
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment,
                                        org.springframework.boot.SpringApplication application) {
-        boolean enabled = isEnable(environment);
-        if (!enabled) {
-            System.out.println("[Dotenv] Loading disabled via 'dotenv.enabled=false'");
-            return;
-        }
+        if (!isEnable(environment)) return;
 
         Map<String, String> envVariableMap = new HashMap<>(DotenvLoader.load(environment));
 
@@ -43,22 +43,5 @@ public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor 
         } else {
             environment.getPropertySources().addLast(newPropertySource);
         }
-        printStartupMessage(enabled, envVariableMap.size(), getDotenvPath(environment));
-    }
-
-    private void printStartupMessage(boolean enabled, int variableCount, String dotenvPath) {
-        String status = enabled ? "Enabled" : "Disabled";
-        String variableInfo = enabled ? "Loaded: " + variableCount + " variables" : "Dotenv is turned off";
-
-        String message = String.format("""
-                =======================================
-                * stayfocused.one - Spring Boot Dotenv
-                * Status: %s
-                * Env Path: %s
-                * %s
-                =======================================
-                """, status, dotenvPath, variableInfo);
-
-        System.out.println(message);
     }
 }
