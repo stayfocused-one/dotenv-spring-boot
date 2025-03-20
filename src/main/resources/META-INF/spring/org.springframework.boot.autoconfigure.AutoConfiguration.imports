@@ -1,2 +1,3 @@
 one.stayfocused.spring_boot_dotenv.environment.DotenvEnvironmentPostProcessor
 one.stayfocused.spring_boot_dotenv.config.DotenvLogger
+one.stayfocused.spring_boot_dotenv.config.DotenvConfig

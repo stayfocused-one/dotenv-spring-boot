@@ -3,12 +3,9 @@ package one.stayfocused.spring_boot_dotenv.reload;
 import lombok.extern.slf4j.Slf4j;
 import one.stayfocused.spring_boot_dotenv.core.DotenvLoader;
 import one.stayfocused.spring_boot_dotenv.environment.DotenvPropertySource;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
