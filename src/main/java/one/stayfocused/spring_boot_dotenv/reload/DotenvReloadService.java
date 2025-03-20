@@ -31,12 +31,10 @@ import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
  */
 @Slf4j
 @Service
-public class DotenvReloadService implements ApplicationContextAware {
+public class DotenvReloadService {
 
     private final ConfigurableEnvironment environment;
     private final Map<String, String> dotenvCache = new ConcurrentHashMap<>();
-
-    private ApplicationContext applicationContext;
 
     /**
      * Constructs a {@code DotenvReloadService} and preloads the environment variables.
@@ -78,26 +76,8 @@ public class DotenvReloadService implements ApplicationContextAware {
         }
 
         log.info("[Dotenv] .env file successfully reloaded ({} variables)",  dotenvCache.size());
-        log.debug("[Dotenv] Reloaded variables: {}", dotenvCache.keySet());
 
-        if (applicationContext != null) {
-            log.info("[Dotenv] Triggering Spring Context refresh...");
-            applicationContext.publishEvent(new ContextRefreshedEvent(applicationContext));
-        } else {
-            log.warn("[Dotenv] ApplicationContext is null, skipping refresh event.");
-        }
         return true;
-    }
-
-    /**
-     * Sets the {@link ApplicationContext}, allowing this service to trigger
-     * a context refresh after reloading environment variables.
-     *
-     * @param applicationContext the Spring application context
-     */
-    @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
     }
 
     /**
