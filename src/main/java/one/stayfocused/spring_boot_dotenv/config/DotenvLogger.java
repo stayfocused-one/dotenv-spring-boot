@@ -37,11 +37,11 @@ public class DotenvLogger {
                 .map(Map::size)
                 .orElse(0);
 
-        log.info("[Dotenv] Status: {}", enabled ? "ENABLED" : "DISABLED");
+        log.info("[Dotenv] Status: {}", enabled ? "enabled" : "disabled");
         log.info("[Dotenv] Path: {}", dotenvPath);
         log.info("[Dotenv] Fail on missing: {}", failOnMissing);
         log.info("[Dotenv] Priority: {}", priority);
-        log.info("[Dotenv] Reload in runtime: {}", reload ? "ENABLED" : "DISABLED");
+        log.info("[Dotenv] Reload in runtime: {}", reload ? "enabled" : "disabled");
         log.info("[Dotenv] Loaded variables: {} ", variableCount);
     }
 }
