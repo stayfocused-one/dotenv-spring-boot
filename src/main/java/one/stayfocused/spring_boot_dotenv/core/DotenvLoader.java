@@ -10,10 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
 /**
@@ -44,6 +42,10 @@ public class DotenvLoader {
         throw new UnsupportedOperationException("DotenvLoader is a utility class and cannot be instantiated.");
     }
 
+    public static Map<String, String> load(Environment environment) {
+        return load(environment, new DotenvParser());
+    }
+
     /**
      * Loads environment variables from a `.env` file based on the application's configuration.
      * <p>
@@ -55,10 +57,10 @@ public class DotenvLoader {
      * @return a {@link Map} containing environment variables.
      * @throws DotenvFileNotFoundException if the file is missing and {@code dotenv.fail-on-missing} is enabled.
      */
-    public static Map<String, String> load(Environment environment) {
+    public static Map<String, String> load(Environment environment, EnvParser parser) {
         String dotenvPath = environment.getProperty(DOTENV_PATH_KEY, DEFAULT_ENV_PATH);
         boolean failOnMissing = isFailOnMissing(environment);
-        return loadFromPath(dotenvPath, failOnMissing);
+        return loadFromPath(dotenvPath, failOnMissing, parser);
     }
 
     /**
@@ -73,7 +75,7 @@ public class DotenvLoader {
      * @return a {@link Map} containing the parsed environment variables.
      * @throws DotenvFileNotFoundException if the file is missing and {@code failOnMissing} is true.
      */
-    private static Map<String, String> loadFromPath(String path, boolean failOnMissing) {
+    private static Map<String, String> loadFromPath(String path, boolean failOnMissing, EnvParser parser) {
         Path envPath = Paths.get(path);
 
         if (!Files.exists(envPath)) {
@@ -86,7 +88,6 @@ public class DotenvLoader {
 
         try {
             List<String> lines = Files.readAllLines(envPath);
-            DotenvParser parser = new DotenvParser();
             Map<String, String> envVariables = parser.parse(lines);
             log.debug("[Dotenv] Successfully loaded {} variables from {}", envVariables.size(), envPath);
             return envVariables;
