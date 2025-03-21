@@ -3,6 +3,7 @@ package one.stayfocused.spring_boot_dotenv.reload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
  *
  * <p>Usage example:
  * <pre>{@code
- * curl http://localhost:8080/actuator/dotenvReload
+ * curl -X POST http://localhost:8080/actuator/dotenvReload
  * }</pre>
  *
  * @author Augustin (StayFocused)
@@ -40,7 +41,7 @@ public class DotenvReloadEndpoint {
      *
      * @return a success message if reload is enabled, otherwise an error message
      */
-    @ReadOperation
+    @WriteOperation
     public String reloadDotenv() {
         boolean reloaded = dotenvReloadService.reload();
         return reloaded
