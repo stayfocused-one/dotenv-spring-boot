@@ -2,9 +2,10 @@ package one.stayfocused.spring_boot_dotenv.reload;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
-import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * Exposes a custom Spring Boot Actuator endpoint for reloading the `.env` file at runtime.
@@ -42,10 +43,10 @@ public class DotenvReloadEndpoint {
      * @return a success message if reload is enabled, otherwise an error message
      */
     @WriteOperation
-    public String reloadDotenv() {
+    public Map<String, String> reloadDotenv() {
         boolean reloaded = dotenvReloadService.reload();
-        return reloaded
+        return Map.of("message", reloaded
                 ? "Dotenv successfully reloaded!"
-                : "Dotenv reload is disabled in configuration.";
+                : "Dotenv reload is disabled. Enable it with 'dotenv.reload.enabled=true'.");
     }
 }

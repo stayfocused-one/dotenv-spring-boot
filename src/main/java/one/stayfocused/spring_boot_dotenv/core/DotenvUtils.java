@@ -145,6 +145,6 @@ public final class DotenvUtils {
      * @return {@code true} if .env loading is enabled, otherwise {@code false}.
      */
     public static boolean isEnable(Environment environment) {
-        return environment.getProperty(DOTENV_ENABLED_KEY, String.valueOf(DEFAULT_DOTENV_ENABLED)).equals("true");
+        return getBooleanProperty(environment, DOTENV_ENABLED_KEY, DEFAULT_DOTENV_ENABLED);
     }
 }
