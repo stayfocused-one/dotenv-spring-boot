@@ -28,7 +28,7 @@ public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor 
     static {
         final String BLUE = "\u001B[34m";
         final String RESET = "\u001B[0m";
-
+        // Using System.out because logger is not yet initialized at this early stage
         System.out.println("\n" + BLUE + "stayfocused.one" + RESET + " :: Dotenv for Spring Boot (v1.0.0)\n");
     }
 
