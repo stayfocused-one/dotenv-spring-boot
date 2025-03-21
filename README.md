@@ -1,9 +1,9 @@
-# Spring Boot Dotenv
+# Dotenv for Spring Boot
 
-Spring Boot Dotenv provides a **simple and flexible** way to load `.env` files into Spring Boot applications. It requires **no manual configuration**, automatically integrating environment variables from `.env` files into the application's `Environment` with just a single `@EnableDotenv` annotation. It also supports **profile-based `.env` files**, allowing different `.env` configurations based on the active Spring profile. The library is **fault-tolerant**, meaning if a `.env` file is missing, the application will still run without issues, ensuring maximum **flexibility**.
+Dotenv for Spring Boot provides a **simple and flexible** way to load `.env` files into Spring Boot applications. It requires **no manual configuration**, automatically integrating environment variables from `.env` files into the application's `Environment`. It also supports **profile-based `.env` files**, allowing different `.env` configurations based on the active Spring profile. The library is **fault-tolerant**, meaning if a `.env` file is missing, the application will still run without issues, ensuring maximum **flexibility**.
 ## Features
 
-- **Autoconfiguration** using `@EnableDotenv`.
+- **Plug-and-Start:** auto-loads `.env` files into Spring `Environment`.
 - **Flexible loading** of `.env` from different locations: project root, `resources/`, or a custom path (`dotenv.path`).
 - **Profile-based .env support** (`.env.{profile}` for different environments).
 - **Configurable settings** via `application.properties`.
@@ -39,35 +39,21 @@ dependencies {
 
 ## Quick Start
 
-### **1. Enable Dotenv**
-
-```java
-@EnableDotenv // Required to activate dotenv support
-@SpringBootApplication
-public class MyApp {
-    public static void main(String[] args) {
-        SpringApplication.run(MyApp.class, args);
-    }
-}
-```
-
-➡ *Dotenv requires `@EnableDotenv` to be explicitly added to your main class. Without it, dotenv support will not be activated.*
-
-### **2. Create a `.env` file**
+### **1. Create a `.env` file**
 
 ```env
 DATABASE_URL=jdbc:postgresql://localhost:5432/mydb
 SECRET_KEY=mysecret
 ```
 
-### **3. Configuration via `application.properties`**
+### **2. Configuration via `application.properties (optional)`**
 
 ```properties
 # Enable dotenv (default: true)
 dotenv.enabled=true
 
 # Custom path to .env (project root by default)
-dotenv.path=config/.env
+dotenv.path=src/main/resources/.env
 
 # Priority (high - above application.properties, low - below)
 dotenv.priority=high
@@ -164,6 +150,22 @@ Now, you can trigger a reload with:
 curl -X POST http://localhost:8080/dotenv/reload
 ```
 
+Вот как может выглядеть этот раздел:
+
+---
+
+### ⚠️ NOTE: Using Dotenv with Spring DevTools
+
+Spring DevTools automatically monitors classpath changes and may trigger a full application restart after `.env` is reloaded. This behavior can interfere with the goal of reloading environment variables **without** restarting the application.
+
+To prevent DevTools from restarting the context when using this library, create a `.spring-devtools.properties` file in the `src/main/resources` directory of your application and add the following line:
+
+```
+restart.exclude.one.stayfocused.spring_boot_dotenv=**
+```
+
+This tells Spring DevTools to exclude the Dotenv library from restart triggers, allowing your application to reload `.env` variables dynamically via Actuator or a custom controller without a full restart.
+
 ---
 
 ## Configuration Options
@@ -177,6 +179,15 @@ curl -X POST http://localhost:8080/dotenv/reload
 | `dotenv.reload.enabled`  | Enables reloading without restart                 | `false`       |
 
 ---
+
+## Limitations
+The current version of the library provides basic .env file parsing with the following limitations:
+- Multi-line values are not supported.
+- Variable substitution (e.g., `${VAR}`) is not supported.
+- Escaped characters (e.g., `\n`, `\t`, `\ `) are not processed.
+- Only basic key-value pairs are supported (e.g., `KEY=value` or `KEY="value"`).
+
+These limitations will be addressed in future versions.
 
 ## Build & Test
 

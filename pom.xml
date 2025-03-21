@@ -96,6 +96,11 @@
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 					</archive>
+					<includes>
+						<include>one/stayfocused/spring_boot_dotenv/**</include>
+						<include>META-INF/spring/**</include>
+						<include>META-INF/**</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>

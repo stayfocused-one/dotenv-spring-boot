@@ -1,18 +1,18 @@
-package one.stayfocused.spring_boot_dotenv;
+package one.stayfocused.spring_boot_dotenv.reload;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import one.stayfocused.spring_boot_dotenv.core.DotenvLoader;
+import one.stayfocused.spring_boot_dotenv.core.EnvLoader;
+import one.stayfocused.spring_boot_dotenv.environment.DotenvPropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static one.stayfocused.spring_boot_dotenv.DotenvUtils.*;
+import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
 
 /**
  * A service that enables reloading environment variables from a {@code .env} file
@@ -25,23 +25,24 @@ import static one.stayfocused.spring_boot_dotenv.DotenvUtils.*;
  * <p>To enable reloading, set {@code dotenv.reload.enabled=true} in your application properties.
  *
  * @author Augustin (StayFocused)
- * @since 0.0.1
+ * @since 1.0.0
  */
 @Slf4j
 @Service
-public class DotenvReloadService implements ApplicationContextAware {
+public class DotenvReloadService implements ReloadService {
 
     private final ConfigurableEnvironment environment;
+    private final EnvLoader envLoader;
     private final Map<String, String> dotenvCache = new ConcurrentHashMap<>();
-    private ApplicationContext applicationContext;
 
     /**
      * Constructs a {@code DotenvReloadService} and preloads the environment variables.
      *
      * @param environment the Spring environment in which properties are managed
      */
-    public DotenvReloadService(ConfigurableEnvironment environment) {
+    public DotenvReloadService(ConfigurableEnvironment environment, EnvLoader envLoader) {
         this.environment = environment;
+        this.envLoader = envLoader;
         reloadDotenvCache();
     }
 
@@ -58,11 +59,11 @@ public class DotenvReloadService implements ApplicationContextAware {
      */
     public boolean reload() {
         if (!isReloadEnabled(environment)) {
-            log.warn("Dotenv reload is disabled. Enable it with `dotenv.reload.enabled=true`");
+            log.warn("[Dotenv] Dotenv reload is disabled. Enable it with `dotenv.reload.enabled=true`");
             return false;
         }
 
-        log.info("Reloading .env file...");
+        log.info("[Dotenv] Reloading .env file...");
         reloadDotenvCache();
 
         environment.getPropertySources().remove(PROPERTY_SOURCE_NAME);
@@ -74,27 +75,9 @@ public class DotenvReloadService implements ApplicationContextAware {
             environment.getPropertySources().addLast(newPropertySource);
         }
 
-        log.info(".env file successfully reloaded ({} variables)",  dotenvCache.size());
-        log.debug("Reloaded variables: {}", dotenvCache.keySet());
+        log.info("[Dotenv] .env file successfully reloaded ({} variables)",  dotenvCache.size());
 
-        if (applicationContext != null) {
-            log.info("Triggering Spring Context refresh...");
-            applicationContext.publishEvent(new ContextRefreshedEvent(applicationContext));
-        } else {
-            log.warn("ApplicationContext is null, skipping refresh event.");
-        }
         return true;
-    }
-
-    /**
-     * Sets the {@link ApplicationContext}, allowing this service to trigger
-     * a context refresh after reloading environment variables.
-     *
-     * @param applicationContext the Spring application context
-     */
-    @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
     }
 
     /**
@@ -102,6 +85,6 @@ public class DotenvReloadService implements ApplicationContextAware {
      */
     private void reloadDotenvCache() {
         dotenvCache.clear();
-        dotenvCache.putAll(DotenvPropertySourceLoader.loadDotenvFromFile(environment));
+        dotenvCache.putAll(envLoader.load(environment));
     }
 }

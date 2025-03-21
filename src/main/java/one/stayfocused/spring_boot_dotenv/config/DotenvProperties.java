@@ -1,11 +1,17 @@
-package one.stayfocused.spring_boot_dotenv;
+package one.stayfocused.spring_boot_dotenv.config;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@Getter
+/**
+ * Provides metadata for dotenv settings in application.properties / application.yml.
+ *
+ * @author Augustin (StayFocused)
+ * @since 1.0.0
+ */
 @Setter
+@Getter
 @ConfigurationProperties(prefix = "dotenv")
 public class DotenvProperties {
 
@@ -32,5 +38,11 @@ public class DotenvProperties {
     /**
      * Enable or disable the ability to reload the .env file at runtime.
      */
-    private boolean reloadEnabled = false;
+    private Reload reload = new Reload();
+
+    @Getter
+    @Setter
+    public static class Reload {
+        private boolean enabled;
+    }
 }

@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv;
+package one.stayfocused.spring_boot_dotenv.core;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -20,7 +20,7 @@ import org.springframework.core.env.Environment;
  * <p>This is a final utility class and cannot be instantiated.</p>
  *
  * @author Augustin (StayFocused)
- * @since 0.0.1
+ * @since 1.0.0
  */
 @Slf4j
 public final class DotenvUtils {
@@ -135,20 +135,16 @@ public final class DotenvUtils {
     }
 
     /**
-     * Handles cases where the `.env` file is missing.
+     * Checks if .env file loading is enabled.
+     * <p>
+     * Retrieves the {@code dotenv.enabled} property from {@link Environment}.
+     * Defaults to {@code false} if not set. Returns {@code true} if the property
+     * is explicitly set to "true".
      *
-     * <p>If `dotenv.fail-on-missing=true`, this method will throw an exception.
-     * Otherwise, it logs a warning.</p>
-     *
-     * @param dotenvPath the expected path of the `.env` file
-     * @param failOnMissing whether the application should fail if the file is missing
-     * @throws IllegalStateException if `dotenv.fail-on-missing=true` and the file is not found
+     * @param environment the {@link Environment} containing application properties.
+     * @return {@code true} if .env loading is enabled, otherwise {@code false}.
      */
-    public static void handleMissingFile(String dotenvPath, boolean failOnMissing) {
-        if (failOnMissing) {
-            throw new IllegalStateException(".env file not found at: " + dotenvPath);
-        } else {
-            log.warn(".env file not found at: {}", dotenvPath);
-        }
+    public static boolean isEnable(Environment environment) {
+        return getBooleanProperty(environment, DOTENV_ENABLED_KEY, DEFAULT_DOTENV_ENABLED);
     }
 }
