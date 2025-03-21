@@ -3,7 +3,7 @@
 Dotenv for Spring Boot provides a **simple and flexible** way to load `.env` files into Spring Boot applications. It requires **no manual configuration**, automatically integrating environment variables from `.env` files into the application's `Environment`. It also supports **profile-based `.env` files**, allowing different `.env` configurations based on the active Spring profile. The library is **fault-tolerant**, meaning if a `.env` file is missing, the application will still run without issues, ensuring maximum **flexibility**.
 ## Features
 
-- **Plug-and-Play integration:** automatically loads `.env` files into the Spring `Environment` without any configuration.
+- **Plug-and-Start:** auto-loads `.env` files into Spring `Environment`.
 - **Flexible loading** of `.env` from different locations: project root, `resources/`, or a custom path (`dotenv.path`).
 - **Profile-based .env support** (`.env.{profile}` for different environments).
 - **Configurable settings** via `application.properties`.
