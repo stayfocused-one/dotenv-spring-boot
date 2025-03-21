@@ -12,16 +12,27 @@ import java.util.Optional;
 
 import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
 
+/**
+ * Logs .env configuration details on application startup.
+ */
 @Slf4j
 @Component
 public class DotenvLogger {
 
     private final ConfigurableEnvironment environment;
 
+    /**
+     * Constructs a new logger with the given environment.
+     *
+     * @param environment the Spring environment
+     */
     public DotenvLogger(ConfigurableEnvironment environment) {
         this.environment = environment;
     }
 
+    /**
+     * Logs .env configuration details when the application is ready.
+     */
     @EventListener(ApplicationReadyEvent.class)
     public void logDotenvInfo() {
         boolean enabled = environment.getPropertySources().contains(PROPERTY_SOURCE_NAME);
