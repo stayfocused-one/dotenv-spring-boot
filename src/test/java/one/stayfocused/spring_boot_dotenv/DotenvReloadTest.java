@@ -49,7 +49,7 @@ class DotenvReloadTest extends DotenvTestBase {
         ResponseEntity<String> response = restTemplate.postForEntity(reloadDotenvUrl, request, String.class);
 
         assertEquals(200, response.getStatusCode().value());
-        assertEquals("Dotenv successfully reloaded!", response.getBody());
+        assertEquals("{\"message\":\"Dotenv successfully reloaded!\"}", response.getBody());
 
         assertEquals(PROPERTY_VALUE_AFTER_RELOAD, environment.getProperty(PROPERTY_KEY),
                 "After reload, value should be AfterReload");
