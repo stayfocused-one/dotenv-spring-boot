@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,7 +43,10 @@ class DotenvReloadTest extends DotenvTestBase {
         Files.writeString(DOTENV_PATH, PROPERTY_KEY + "=" + PROPERTY_VALUE_AFTER_RELOAD);
         Thread.sleep(1000);
 
-        ResponseEntity<String> response = restTemplate.getForEntity(reloadDotenvUrl, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(reloadDotenvUrl, request, String.class);
 
         assertEquals(200, response.getStatusCode().value());
         assertEquals("Dotenv successfully reloaded!", response.getBody());
