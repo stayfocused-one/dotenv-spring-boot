@@ -2,6 +2,7 @@ package one.stayfocused.spring_boot_dotenv.core;
 
 import lombok.extern.slf4j.Slf4j;
 import one.stayfocused.spring_boot_dotenv.exception.DotenvFileNotFoundException;
+import one.stayfocused.spring_boot_dotenv.exception.DotenvParseException;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
@@ -88,6 +89,7 @@ public class DotenvLoader {
             log.debug("[Dotenv] Successfully loaded {} variables from {}", envVariables.size(), envPath);
         } catch (IOException e) {
             log.error("[Dotenv] Failed to load .env file from {}: {}", envPath, e.getMessage());
+            throw new DotenvParseException("Failed to parse .env file from " + envPath, e);
         }
 
         return envVariables;
