@@ -58,7 +58,7 @@ public class DotenvLoader {
      * @throws DotenvFileNotFoundException if the file is missing and {@code dotenv.fail-on-missing} is enabled.
      */
     public static Map<String, String> load(Environment environment, EnvParser parser) {
-        String dotenvPath = environment.getProperty(DOTENV_PATH_KEY, DEFAULT_ENV_PATH);
+        String dotenvPath = getDotenvPath(environment);
         boolean failOnMissing = isFailOnMissing(environment);
         return loadFromPath(dotenvPath, failOnMissing, parser);
     }
