@@ -180,6 +180,15 @@ This tells Spring DevTools to exclude the Dotenv library from restart triggers, 
 
 ---
 
+## Limitations
+The current version of the library provides basic .env file parsing with the following limitations:
+- Multi-line values are not supported.
+- Variable substitution (e.g., `${VAR}`) is not supported.
+- Escaped characters (e.g., `\n`, `\t`, `\ `) are not processed.
+- Only basic key-value pairs are supported (e.g., `KEY=value` or `KEY="value"`).
+
+These limitations will be addressed in future versions.
+
 ## Build & Test
 
 ### Build Locally
