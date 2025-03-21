@@ -32,7 +32,7 @@ import java.util.Map;
 @Endpoint(id = "dotenvReload")
 public class DotenvReloadEndpoint {
 
-    private final DotenvReloadService dotenvReloadService;
+    private final ReloadService reloadService;
 
     /**
      * Triggers a reload of the `.env` file.
@@ -44,7 +44,7 @@ public class DotenvReloadEndpoint {
      */
     @WriteOperation
     public Map<String, String> reloadDotenv() {
-        boolean reloaded = dotenvReloadService.reload();
+        boolean reloaded = reloadService.reload();
         return Map.of("message", reloaded
                 ? "Dotenv successfully reloaded!"
                 : "Dotenv reload is disabled. Enable it with 'dotenv.reload.enabled=true'.");

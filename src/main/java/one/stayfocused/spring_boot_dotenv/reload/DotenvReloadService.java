@@ -2,6 +2,7 @@ package one.stayfocused.spring_boot_dotenv.reload;
 
 import lombok.extern.slf4j.Slf4j;
 import one.stayfocused.spring_boot_dotenv.core.DotenvLoader;
+import one.stayfocused.spring_boot_dotenv.core.EnvLoader;
 import one.stayfocused.spring_boot_dotenv.environment.DotenvPropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -28,9 +29,10 @@ import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
  */
 @Slf4j
 @Service
-public class DotenvReloadService {
+public class DotenvReloadService implements ReloadService {
 
     private final ConfigurableEnvironment environment;
+    private final EnvLoader envLoader;
     private final Map<String, String> dotenvCache = new ConcurrentHashMap<>();
 
     /**
@@ -38,8 +40,9 @@ public class DotenvReloadService {
      *
      * @param environment the Spring environment in which properties are managed
      */
-    public DotenvReloadService(ConfigurableEnvironment environment) {
+    public DotenvReloadService(ConfigurableEnvironment environment, EnvLoader envLoader) {
         this.environment = environment;
+        this.envLoader = envLoader;
         reloadDotenvCache();
     }
 
@@ -82,6 +85,6 @@ public class DotenvReloadService {
      */
     private void reloadDotenvCache() {
         dotenvCache.clear();
-        dotenvCache.putAll(DotenvLoader.load(environment));
+        dotenvCache.putAll(envLoader.load(environment));
     }
 }
