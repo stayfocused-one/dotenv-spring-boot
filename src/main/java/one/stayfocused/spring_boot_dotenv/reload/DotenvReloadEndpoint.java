@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  *
  * <p>Usage example:
  * <pre>{@code
- * curl -X POST http://localhost:8080/actuator/dotenvReload
+ * curl http://localhost:8080/actuator/dotenvReload
  * }</pre>
  *
  * @author Augustin (StayFocused)
