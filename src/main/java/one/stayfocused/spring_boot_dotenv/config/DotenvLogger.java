@@ -3,9 +3,9 @@ package one.stayfocused.spring_boot_dotenv.config;
 import lombok.extern.slf4j.Slf4j;
 import one.stayfocused.spring_boot_dotenv.environment.DotenvPropertySource;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.env.ConfigurableEnvironment;;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Optional;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
 
 @Slf4j
-@Configuration
+@Component
 public class DotenvLogger {
 
     private final ConfigurableEnvironment environment;
