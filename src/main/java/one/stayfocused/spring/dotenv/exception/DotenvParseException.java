@@ -1,7 +1,7 @@
 package one.stayfocused.spring.dotenv.exception;
 
 /**
- * Thrown when an error occurs while parsing a .env file.
+ * Exception thrown when an error occurs while parsing a {@code .env} file.
  */
 public class DotenvParseException extends RuntimeException {
 
