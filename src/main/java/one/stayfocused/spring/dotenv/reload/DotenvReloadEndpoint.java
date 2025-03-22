@@ -1,6 +1,6 @@
 package one.stayfocused.spring.dotenv.reload;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.stereotype.Component;
@@ -8,39 +8,36 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * Exposes a custom Spring Boot Actuator endpoint for reloading the `.env` file at runtime.
- *
- * <p>This endpoint allows triggering a reload of environment variables from the `.env` file
- * without restarting the application. It requires the property {@code dotenv.reload.enabled=true}
- * to be set in `application.properties` or `application.yml`.
- *
- * <p>By default, this endpoint is disabled unless explicitly exposed via:
- * <pre>{@code
- * management.endpoints.web.exposure.include=dotenvReload
- * }</pre>
- *
- * <p>Usage example:
- * <pre>{@code
- * curl -X POST http://localhost:8080/actuator/dotenvReload
- * }</pre>
+ * Actuator endpoint for reloading the {@code .env} file at runtime.
+ * <p>
+ * Triggers a reload of environment variables without restarting the application.
+ * Requires {@code dotenv.reload.enabled=true} in application properties.
+ * Expose this endpoint via {@code management.endpoints.web.exposure.include=dotenvReload}.
+ * </p>
  *
  * @author Augustin (StayFocused)
  * @since 1.0.0
  */
 @Component
-@RequiredArgsConstructor
 @Endpoint(id = "dotenvReload")
 public class DotenvReloadEndpoint {
 
     private final ReloadService reloadService;
 
     /**
-     * Triggers a reload of the `.env` file.
+     * Constructs a {@code DotenvReloadEndpoint} with the specified reload service.
      *
-     * <p>This method reloads environment variables and updates the Spring Environment.
-     * If reloading is disabled, it returns a message indicating that the operation is not allowed.
+     * @param reloadService the service to handle reloading of environment variables
+     */
+    @Autowired
+    public DotenvReloadEndpoint(ReloadService reloadService) {
+        this.reloadService = reloadService;
+    }
+
+    /**
+     * Triggers a reload of the {@code .env} file into the Spring Environment.
      *
-     * @return a success message if reload is enabled, otherwise an error message
+     * @return a map with a message indicating success or failure (if reloading is disabled)
      */
     @WriteOperation
     public Map<String, String> reloadDotenv() {
