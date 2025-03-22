@@ -14,6 +14,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpringBootDotenvApplication {
 
 	/**
+	 * Constructs a new {@code SpringBootDotenvApplication}.
+	 */
+	public SpringBootDotenvApplication() {
+		// No initialization needed
+	}
+
+	/**
 	 * Main method to start the Spring Boot application with Dotenv support.
 	 *
 	 * @param args command-line arguments passed to the application

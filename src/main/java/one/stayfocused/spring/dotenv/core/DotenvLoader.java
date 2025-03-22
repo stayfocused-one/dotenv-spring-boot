@@ -35,6 +35,13 @@ public class DotenvLoader {
         throw new UnsupportedOperationException("DotenvLoader is a utility class and cannot be instantiated.");
     }
 
+    /**
+     * Loads environment variables from a {@code .env} file using a default parser.
+     *
+     * @param environment the Spring {@link Environment} to retrieve configuration from
+     * @return a map of environment variables
+     * @throws DotenvFileNotFoundException if the file is missing and {@code dotenv.fail-on-missing} is enabled
+     */
     public static Map<String, String> load(Environment environment) {
         return load(environment, new DotenvParser());
     }
