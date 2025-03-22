@@ -15,16 +15,9 @@ import java.util.Map;
 
 import static one.stayfocused.spring.dotenv.core.DotenvUtils.*;
 /**
- * Utility class for loading environment variables from a `.env` file.
+ * Utility class for loading environment variables from a {@code .env} file.
  * <p>
- * This class is responsible for reading a `.env` file from the specified path,
- * parsing its contents, and providing the environment variables as a {@link Map}.
- * The class cannot be instantiated.
- * </p>
- *
- * <p>
- * The file path is determined from the application properties (`dotenv.path`),
- * and the behavior for missing files is controlled by `dotenv.fail-on-missing`.
+ * Reads and parses the file, returning variables as a {@link Map}. Not instantiable.
  * </p>
  *
  * @author Augustin (StayFocused)
@@ -36,7 +29,7 @@ public class DotenvLoader {
     /**
      * Private constructor to prevent instantiation.
      *
-     * @throws UnsupportedOperationException if an attempt to instantiate the class is made.
+     * @throws UnsupportedOperationException if instantiation is attempted
      */
     private DotenvLoader() {
         throw new UnsupportedOperationException("DotenvLoader is a utility class and cannot be instantiated.");
@@ -47,15 +40,16 @@ public class DotenvLoader {
     }
 
     /**
-     * Loads environment variables from a `.env` file based on the application's configuration.
+     * Loads environment variables from a {@code .env} file based on the application's configuration.
      * <p>
-     * The path to the file is retrieved from {@code dotenv.path} in the Spring {@link Environment}.
-     * If the file is missing and {@code dotenv.fail-on-missing=true}, an exception is thrown.
+     * Uses the path from {@code dotenv.path} in the Spring {@link Environment}.
+     * Throws an exception if the file is missing and {@code dotenv.fail-on-missing=true}.
      * </p>
      *
-     * @param environment the Spring {@link Environment} to retrieve configuration properties.
-     * @return a {@link Map} containing environment variables.
-     * @throws DotenvFileNotFoundException if the file is missing and {@code dotenv.fail-on-missing} is enabled.
+     * @param environment the Spring {@link Environment} to retrieve configuration from
+     * @param parser the parser to use for the {@code .env} file
+     * @return a map of environment variables
+     * @throws DotenvFileNotFoundException if the file is missing and {@code dotenv.fail-on-missing} is enabled
      */
     public static Map<String, String> load(Environment environment, EnvParser parser) {
         String dotenvPath = getDotenvPath(environment);
@@ -64,16 +58,16 @@ public class DotenvLoader {
     }
 
     /**
-     * Loads environment variables from a specific `.env` file path.
+     * Loads environment variables from a specific {@code .env} file path.
      * <p>
-     * If the file is missing and {@code failOnMissing} is enabled, an exception is thrown.
-     * Otherwise, an empty map is returned.
+     * Returns an empty map if the file is missing and {@code failOnMissing} is disabled.
      * </p>
      *
-     * @param path the path to the `.env` file.
-     * @param failOnMissing whether to throw an exception if the file is missing.
-     * @return a {@link Map} containing the parsed environment variables.
-     * @throws DotenvFileNotFoundException if the file is missing and {@code failOnMissing} is true.
+     * @param path the path to the {@code .env} file
+     * @param failOnMissing whether to throw an exception if the file is missing
+     * @param parser the parser to use for the {@code .env} file
+     * @return a map of parsed environment variables
+     * @throws DotenvFileNotFoundException if the file is missing and {@code failOnMissing} is true
      */
     private static Map<String, String> loadFromPath(String path, boolean failOnMissing, EnvParser parser) {
         Path envPath = Paths.get(path);
