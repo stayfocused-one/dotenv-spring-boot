@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * Auto-configuration for Dotenv support in Spring Boot.
+ * Autoconfiguration for Dotenv support in Spring Boot.
  * <p>
  * Enables loading of {@code .env} files and registers related components.
  * </p>
