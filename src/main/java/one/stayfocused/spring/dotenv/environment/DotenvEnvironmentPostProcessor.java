@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import one.stayfocused.spring.dotenv.core.DotenvLoader;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,19 +12,24 @@ import java.util.Map;
 import static one.stayfocused.spring.dotenv.core.DotenvUtils.*;
 
 /**
- * Custom {@link EnvironmentPostProcessor} that loads environment variables from a `.env` file
- * before Spring Boot initializes its configuration.
+ * Custom {@link EnvironmentPostProcessor} that loads variables from a {@code .env} file into Spring's {@link Environment}.
  * <p>
- * - Checks if dotenv loading is enabled via `dotenv.enabled` property.
- * - Uses {@link DotenvLoader} to load variables from the specified `.env` file.
- * - Registers the loaded variables as a {@link DotenvPropertySource} in the Spring environment.
- * - Supports priority configuration (`dotenv.priority=high|low`).
+ * Loads variables before Spring Boot configuration initialization. Supports enabling/disabling via {@code dotenv.enabled}
+ * and priority configuration via {@code dotenv.priority=high|low}.
+ * </p>
  *
  * @author Augustin (StayFocused)
  * @since 1.0.0
  */
 @Slf4j
 public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor {
+
+    /**
+     * Constructs a new {@code DotenvEnvironmentPostProcessor}.
+     */
+    public DotenvEnvironmentPostProcessor() {
+        // No initialization needed
+    }
 
     static {
         final String BLUE = "\u001B[34m";
@@ -32,6 +38,15 @@ public class DotenvEnvironmentPostProcessor implements EnvironmentPostProcessor 
         System.out.println("\n" + BLUE + "stayfocused.one" + RESET + " :: Dotenv for Spring Boot (v1.0.0)\n");
     }
 
+    /**
+     * Loads environment variables from a {@code .env} file into the Spring {@link Environment}.
+     * <p>
+     * Skips loading if {@code dotenv.enabled=false}. Adds variables with high or low priority based on {@code dotenv.priority}.
+     * </p>
+     *
+     * @param environment the Spring {@link ConfigurableEnvironment} to modify
+     * @param application the Spring Boot application
+     */
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment,
                                        org.springframework.boot.SpringApplication application) {
