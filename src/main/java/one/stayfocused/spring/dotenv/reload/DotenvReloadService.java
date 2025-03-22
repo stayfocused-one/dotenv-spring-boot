@@ -14,14 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import static one.stayfocused.spring.dotenv.core.DotenvUtils.*;
 
 /**
- * A service that enables reloading environment variables from a {@code .env} file
- * at runtime without restarting the application.
- *
- * <p>This service reloads the `.env` file and updates Spring's {@link Environment}
- * dynamically, allowing configuration changes to take effect immediately.
- * Optionally, it can trigger a {@link ContextRefreshedEvent} to refresh beans.
- *
- * <p>To enable reloading, set {@code dotenv.reload.enabled=true} in your application properties.
+ * Service for reloading environment variables from a {@code .env} file at runtime.
+ * <p>
+ * Updates Spring's {@link Environment} dynamically when the {@code .env} file changes.
+ * Requires {@code dotenv.reload.enabled=true} in application properties to enable reloading.
+ * </p>
  *
  * @author Augustin (StayFocused)
  * @since 1.0.0
@@ -35,9 +32,10 @@ public class DotenvReloadService implements ReloadService {
     private final Map<String, String> dotenvCache = new ConcurrentHashMap<>();
 
     /**
-     * Constructs a {@code DotenvReloadService} and preloads the environment variables.
+     * Constructs a {@code DotenvReloadService} and preloads environment variables.
      *
-     * @param environment the Spring environment in which properties are managed
+     * @param environment the Spring {@link ConfigurableEnvironment} to manage properties
+     * @param envLoader the {@link EnvLoader} to load environment variables
      */
     public DotenvReloadService(ConfigurableEnvironment environment, EnvLoader envLoader) {
         this.environment = environment;
@@ -46,15 +44,13 @@ public class DotenvReloadService implements ReloadService {
     }
 
     /**
-     * Reloads the environment variables from the `.env` file.
+     * Reloads environment variables from the {@code .env} file into the Spring {@link Environment}.
+     * <p>
+     * Returns {@code false} if reloading is disabled (via {@code dotenv.reload.enabled=false}).
+     * Updates the property sources and logs the result.
+     * </p>
      *
-     * <p>If reloading is disabled via {@code dotenv.reload.enabled=false}, this method
-     * will return {@code false} without making changes.
-     *
-     * <p>The method clears and repopulates the cached variables, updates the property sources,
-     * and optionally triggers a Spring context refresh event.
-     *
-     * @return {@code true} if reloading was successful, {@code false} if reloading is disabled
+     * @return {@code true} if reloading succeeded, {@code false} if disabled
      */
     public boolean reload() {
         if (!isReloadEnabled(environment)) {
@@ -80,7 +76,7 @@ public class DotenvReloadService implements ReloadService {
     }
 
     /**
-     * Clears and reloads the cached environment variables from the `.env` file.
+     * Clears and reloads the cached environment variables from the {@code .env} file.
      */
     private void reloadDotenvCache() {
         dotenvCache.clear();
