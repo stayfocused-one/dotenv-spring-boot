@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv.core;
+package one.stayfocused.spring.dotenv.core;
 
 import java.util.List;
 import java.util.Map;

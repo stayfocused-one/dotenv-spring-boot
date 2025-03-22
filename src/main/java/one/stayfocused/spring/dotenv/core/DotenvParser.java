@@ -1,7 +1,7 @@
-package one.stayfocused.spring_boot_dotenv.core;
+package one.stayfocused.spring.dotenv.core;
 
 import lombok.extern.slf4j.Slf4j;
-import one.stayfocused.spring_boot_dotenv.exception.DotenvParseException;
+import one.stayfocused.spring.dotenv.exception.DotenvParseException;
 
 import java.util.HashMap;
 import java.util.List;

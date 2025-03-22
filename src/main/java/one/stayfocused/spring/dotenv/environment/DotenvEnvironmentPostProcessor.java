@@ -1,14 +1,14 @@
-package one.stayfocused.spring_boot_dotenv.environment;
+package one.stayfocused.spring.dotenv.environment;
 
 import lombok.extern.slf4j.Slf4j;
-import one.stayfocused.spring_boot_dotenv.core.DotenvLoader;
+import one.stayfocused.spring.dotenv.core.DotenvLoader;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
+import static one.stayfocused.spring.dotenv.core.DotenvUtils.*;
 
 /**
  * Custom {@link EnvironmentPostProcessor} that loads environment variables from a `.env` file
