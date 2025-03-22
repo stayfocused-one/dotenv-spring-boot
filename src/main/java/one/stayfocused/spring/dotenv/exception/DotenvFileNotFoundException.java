@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv.exception;
+package one.stayfocused.spring.dotenv.exception;
 
 /**
  * Thrown when a required .env file is not found at the specified path.

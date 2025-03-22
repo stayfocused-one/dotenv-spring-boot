@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv.reload;
+package one.stayfocused.spring.dotenv.reload;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;

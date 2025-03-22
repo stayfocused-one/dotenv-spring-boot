@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv.exception;
+package one.stayfocused.spring.dotenv.exception;
 
 /**
  * Thrown when an error occurs while parsing a .env file.

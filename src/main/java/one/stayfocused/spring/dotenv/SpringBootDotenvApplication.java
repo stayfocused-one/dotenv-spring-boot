@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv;
+package one.stayfocused.spring.dotenv;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

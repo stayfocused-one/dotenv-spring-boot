@@ -1,8 +1,8 @@
-package one.stayfocused.spring_boot_dotenv.core;
+package one.stayfocused.spring.dotenv.core;
 
 import lombok.extern.slf4j.Slf4j;
-import one.stayfocused.spring_boot_dotenv.exception.DotenvFileNotFoundException;
-import one.stayfocused.spring_boot_dotenv.exception.DotenvParseException;
+import one.stayfocused.spring.dotenv.exception.DotenvFileNotFoundException;
+import one.stayfocused.spring.dotenv.exception.DotenvParseException;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
+import static one.stayfocused.spring.dotenv.core.DotenvUtils.*;
 /**
  * Utility class for loading environment variables from a `.env` file.
  * <p>

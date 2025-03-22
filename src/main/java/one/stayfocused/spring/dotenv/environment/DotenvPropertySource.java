@@ -1,4 +1,4 @@
-package one.stayfocused.spring_boot_dotenv.environment;
+package one.stayfocused.spring.dotenv.environment;
 
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;

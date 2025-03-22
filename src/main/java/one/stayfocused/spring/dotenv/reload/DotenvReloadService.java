@@ -1,9 +1,8 @@
-package one.stayfocused.spring_boot_dotenv.reload;
+package one.stayfocused.spring.dotenv.reload;
 
 import lombok.extern.slf4j.Slf4j;
-import one.stayfocused.spring_boot_dotenv.core.DotenvLoader;
-import one.stayfocused.spring_boot_dotenv.core.EnvLoader;
-import one.stayfocused.spring_boot_dotenv.environment.DotenvPropertySource;
+import one.stayfocused.spring.dotenv.core.EnvLoader;
+import one.stayfocused.spring.dotenv.environment.DotenvPropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static one.stayfocused.spring_boot_dotenv.core.DotenvUtils.*;
+import static one.stayfocused.spring.dotenv.core.DotenvUtils.*;
 
 /**
  * A service that enables reloading environment variables from a {@code .env} file
