@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * Default implementation of {@link EnvLoader} using {@link DotenvLoader}.
+ * Default {@link EnvLoader} implementation using {@link DotenvLoader} to load {@code .env} files.
  */
 @Component
 public class DefaultEnvLoader implements EnvLoader {
@@ -22,16 +22,16 @@ public class DefaultEnvLoader implements EnvLoader {
     /**
      * Constructs a new loader with the specified parser.
      *
-     * @param parser the parser to use for .env files
+     * @param parser the parser for {@code .env} files
      */
     public DefaultEnvLoader(EnvParser parser) {
         this.parser = parser;
     }
 
     /**
-     * Loads environment variables from a .env file.
+     * Loads environment variables from a {@code .env} file.
      *
-     * @param environment the Spring environment
+     * @param environment the Spring {@link Environment}
      * @return a map of environment variables
      */
     @Override

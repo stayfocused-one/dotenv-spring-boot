@@ -8,17 +8,27 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Parser for .env file content.
+ * Default implementation of {@link EnvParser} for parsing {@code .env} files.
  */
 @Slf4j
 public class DotenvParser implements EnvParser {
 
     /**
-     * Parses a list of lines from a .env file into a map of environment variables.
+     * Constructs a new {@code DotenvParser}.
+     */
+    public DotenvParser() {
+        // No initialization needed
+    }
+
+    /**
+     * Parses a list of lines from a {@code .env} file into key-value pairs.
+     * <p>
+     * Ignores empty lines and comments (lines starting with {@code #}).
+     * Expects lines in the format {@code KEY=VALUE}.
+     * </p>
      *
      * @param lines the lines to parse
-     * @return a map of environment variables
-     * @throws DotenvParseException if parsing fails
+     * @return a map of key-value pairs
      */
     public Map<String, String> parse(List<String> lines) {
         Map<String, String> envVariables = new HashMap<>();
