@@ -1,0 +1,3 @@
+org.springframework.boot.env.EnvironmentPostProcessor=one.stayfocused.spring.dotenv.environment.DotenvEnvironmentPostProcessor
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=one.stayfocused.spring.dotenv.config.DotenvAutoConfiguration
+
