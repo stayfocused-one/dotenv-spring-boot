@@ -7,7 +7,6 @@ Dotenv for Spring Boot provides a **simple and flexible** way to load `.env` fil
 - **Flexible loading** of `.env` from different locations: project root, `resources/`, or a custom path (`dotenv.path`).
 - **Profile-based .env support** (`.env.{profile}` for different environments).
 - **Configurable settings** via `application.properties`.
-- **Environment reload** without restarting the application via Spring Actuator or a custom REST endpoint.
 - **Priority handling** for `.env` (high/low).
 - **Compatibility** with Spring Boot 2.7+ and 3.x, Java 17+.
 
@@ -58,9 +57,6 @@ dotenv.path=src/main/resources/.env
 # Priority (high - above application.properties, low - below)
 dotenv.priority=high
 
-# Allow reloading without restart
-dotenv.reload.enabled=true
-
 # Allow application run in case .env is missing
 dotenv.fail-on-missing=false
 ```
@@ -96,78 +92,6 @@ When running with `spring.profiles.active=dev`, the library will load `.env.dev`
 
 ---
 
-## Reloading `.env` Without Restart
-
-### Using Actuator
-
-Add Actuator to `pom.xml`:
-
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-actuator</artifactId>
-</dependency>
-```
-
-Enable the endpoint in `application.properties`:
-
-```properties
-management.endpoints.web.exposure.include=dotenvReload
-```
-
-Reload `.env` using:
-
-```bash
-curl -X POST http://localhost:8080/actuator/dotenvReload
-```
-
-### Using a Custom REST Controller
-
-If you are not using Spring Actuator, you can expose a simple `RestController` for reloading `.env` variables:
-
-```java
-@RestController
-@RequestMapping("/dotenv")
-public class DotenvReloadController {
-    private final DotenvReloadService dotenvReloadService;
-
-    public DotenvReloadController(DotenvReloadService dotenvReloadService) {
-        this.dotenvReloadService = dotenvReloadService;
-    }
-
-    @PostMapping("/reload")
-    public ResponseEntity<String> reload() {
-        boolean success = dotenvReloadService.reload();
-        return success ? ResponseEntity.ok("Dotenv reloaded successfully")
-                       : ResponseEntity.badRequest().body("Dotenv reload is disabled");
-    }
-}
-```
-
-Now, you can trigger a reload with:
-
-```bash
-curl -X POST http://localhost:8080/dotenv/reload
-```
-
-Вот как может выглядеть этот раздел:
-
----
-
-### ⚠️ NOTE: Using Dotenv with Spring DevTools
-
-Spring DevTools automatically monitors classpath changes and may trigger a full application restart after `.env` is reloaded. This behavior can interfere with the goal of reloading environment variables **without** restarting the application.
-
-To prevent DevTools from restarting the context when using this library, create a `.spring-devtools.properties` file in the `src/main/resources` directory of your application and add the following line:
-
-```
-restart.exclude.one.stayfocused.spring_boot_dotenv=**
-```
-
-This tells Spring DevTools to exclude the Dotenv library from restart triggers, allowing your application to reload `.env` variables dynamically via Actuator or a custom controller without a full restart.
-
----
-
 ## Configuration Options
 
 | Property                 | Description                                       | Default Value |
@@ -176,7 +100,6 @@ This tells Spring DevTools to exclude the Dotenv library from restart triggers, 
 | `dotenv.path`            | Path to the `.env` file                           | `.env`        |
 | `dotenv.priority`        | Load priority (`high` or `low`)                   | `low`         |
 | `dotenv.fail-on-missing` | Fails if `.env` is missing                        | `false`       |
-| `dotenv.reload.enabled`  | Enables reloading without restart                 | `false`       |
 
 ---
 

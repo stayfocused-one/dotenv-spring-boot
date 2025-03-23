@@ -41,28 +41,4 @@ public class DotenvProperties {
      * Whether to fail if the {@code .env} file is missing. Defaults to {@code false}.
      */
     private boolean failOnMissing = false;
-
-    /**
-     * Settings for runtime reloading of the {@code .env} file.
-     */
-    private Reload reload = new Reload();
-
-    /**
-     * Settings for runtime reloading of the {@code .env} file.
-     */
-    @Getter
-    @Setter
-    public static class Reload {
-        /**
-         * Constructs a new {@code Reload} with default settings.
-         */
-        public Reload() {
-            // Defaults are set via field initializers
-        }
-
-        /**
-         * Whether runtime reloading is enabled. Defaults to {@code false}.
-         */
-        private boolean enabled;
-    }
 }

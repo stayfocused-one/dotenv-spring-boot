@@ -39,7 +39,6 @@ public class DotenvLogger {
         String dotenvPath = environment.getProperty(DOTENV_PATH_KEY, DEFAULT_ENV_PATH);
         String priority = environment.getProperty(DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY);
         String failOnMissing = environment.getProperty(DOTENV_FAIL_ON_MISSING_KEY, String.valueOf(DEFAULT_FAIL_ON_MISSING));
-        boolean reload = Boolean.parseBoolean(environment.getProperty(DOTENV_RELOAD_ENABLED_KEY, String.valueOf(DEFAULT_RELOAD_ENABLED)));
 
         int variableCount = Optional.ofNullable(environment.getPropertySources().get(PROPERTY_SOURCE_NAME))
                 .filter(DotenvPropertySource.class::isInstance)
@@ -52,7 +51,6 @@ public class DotenvLogger {
         log.info("[Dotenv] Path: {}", dotenvPath);
         log.info("[Dotenv] Fail on missing: {}", failOnMissing);
         log.info("[Dotenv] Priority: {}", priority);
-        log.info("[Dotenv] Reload in runtime: {}", reload ? "enabled" : "disabled");
         log.info("[Dotenv] Loaded variables: {} ", variableCount);
     }
 }

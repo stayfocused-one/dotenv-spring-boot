@@ -37,9 +37,6 @@ public final class DotenvUtils {
     /** Key for enforcing failure when the `.env` file is missing. */
     public static final String DOTENV_FAIL_ON_MISSING_KEY = "dotenv.fail-on-missing";
 
-    /** Key for enabling dotenv reload functionality. */
-    public static final String DOTENV_RELOAD_ENABLED_KEY = "dotenv.reload.enabled";
-
     /** Key for determining dotenv property priority. */
     public static final String DOTENV_PRIORITY_KEY = "dotenv.priority";
 
@@ -49,15 +46,11 @@ public final class DotenvUtils {
     /** Default value for enabling dotenv support. */
     public static final boolean DEFAULT_DOTENV_ENABLED = true;
 
-    /** Default value for enabling dotenv reload functionality. */
-    public static final boolean DEFAULT_RELOAD_ENABLED = false;
-
     /** Default value for enforcing failure on missing dotenv file. */
     public static final boolean DEFAULT_FAIL_ON_MISSING = false;
 
     /** Default path for the {@code .env} file. */
     public static final String DEFAULT_ENV_PATH = ".env";
-
 
     /**
      * Private constructor to prevent instantiation.
@@ -112,18 +105,6 @@ public final class DotenvUtils {
      */
     public static boolean isHighPriority(Environment environment) {
         return "high".equals(getStringProperty(environment, DOTENV_PRIORITY_KEY, DEFAULT_DOTENV_PRIORITY));
-    }
-
-    /**
-     * Checks if dotenv reload functionality is enabled.
-     *
-     * @param environment the Spring {@link Environment} to check
-     * @return {@code true} if dotenv reload is enabled, {@code false} otherwise
-     */
-    public static boolean isReloadEnabled(Environment environment) {
-        return Boolean.parseBoolean(environment.getProperty(
-                DOTENV_RELOAD_ENABLED_KEY, String.valueOf(DEFAULT_RELOAD_ENABLED)
-        ));
     }
 
     /**
