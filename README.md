@@ -20,8 +20,8 @@ Add the following dependency to your `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>one.stayfocused</groupId>
-    <artifactId>spring-boot-dotenv</artifactId>
+    <groupId>one.stayfocused.spring</groupId>
+    <artifactId>dotenv-spring-boot</artifactId>
     <version>1.0.0</version>
 </dependency>
 ```
@@ -30,7 +30,7 @@ Add the following dependency to your `pom.xml`:
 
 ```kotlin
 dependencies {
-    implementation("one.stayfocused:spring-boot-dotenv:1.0.0")
+    implementation("one.stayfocused.spring:dotenv-spring-boot:1.0.0")
 }
 ```
 
